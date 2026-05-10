@@ -1,15 +1,15 @@
 // app/page.tsx
-import Navbar from '../app/components/NavBar';
-import ChatBox from '../app/components/ChatBox';
-import { Sidebar } from 'lucide-react';
+import Navbar from './components/NavBar';
+import ChatBox from './components/ChatBox';
+import SideBar from './components/SideBar';
 
-export default async function Page() {
+export default function Page() {
 
   return (
     <div className="flex flex-col h-screen bg-[#FDFCFB]">
       <Navbar />
       <div className="flex flex-1 overflow-hidden">
-        
+        <SideBar />
         <ChatBox />
       </div>
     </div>
