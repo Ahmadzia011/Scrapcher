@@ -24,12 +24,12 @@ export async function storer(urlInput: any) {
       body: JSON.stringify({ url: urlInput, max_pages: 20 }),
     });
 
-    
-    if (!response.ok) {
-      const err = await response.text();
-      console.error("Python server error:", err);
-      return "error";
-    }
+ if (!response.ok) {
+  const err = await response.text();
+  console.error(`Python server error status: ${response.status}`);
+  console.error("Python server error body:", err || "(Empty Response)");
+  return "error";
+}
 
     // The Python server returns: { origin: "https://...", pages: [{ url, markdown }] }
     const data = await response.json();
