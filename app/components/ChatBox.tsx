@@ -150,7 +150,9 @@ function ChatContent() {
   return (
     <main className="flex-1 flex flex-col relative overflow-hidden">
 
-   
+
+
+<div className="text-10xl"> TESTING </div>
       {/* ---------------- Hero Section --------------- */}
 
       {showHero ? (
