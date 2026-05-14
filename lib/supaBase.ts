@@ -1,8 +1,18 @@
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-export default function SupaBase(){
-      const supabase_url: any = process.env.SUPABASE_URL;
-      const supabase_service_key: any = process.env.SUPABASE_SERVICE_ROLE_KEY;
-      const client = createClient(supabase_url, supabase_service_key);
-      return client
+// 1. Create a variable outside the function to store the single instance
+let supabaseInstance: SupabaseClient | null = null;
+
+export default function SupaBase() {
+  // 2. Only initialize if it doesn't exist yet
+  if (!supabaseInstance) {
+    const supabase_url = process.env.SUPABASE_URL!;
+    const supabase_service_key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
+    
+    supabaseInstance = createClient(supabase_url, supabase_service_key);
+    console.log("Supabase Client Initialized (Singleton)");
+  }
+
+  // 3. Always return the same instance
+  return supabaseInstance;
 }

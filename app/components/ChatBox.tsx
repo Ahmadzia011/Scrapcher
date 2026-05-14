@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, Suspense, useRef } from "react";
-import { Globe, Send, Plus } from "lucide-react";
+import { Globe, Send, Plus, Search } from "lucide-react";
 import { Brain } from "../actions/brain";
 import { storer } from "@/lib/storer";
 import { isUrlScraped } from "@/lib/storer";
@@ -80,18 +80,7 @@ function ChatContent() {
     }
   }, [urlParam]);
 
-  const handleNewChat = () => {
-    setQuery("");
-    setExistingSite(false);
-    setError("");
-    setIsError(false);
-    setIsUrlPasted(false);
-    setScrapingDone(false);
-    setUrl("");
-    setUrlCopy("");
-    setSummary("");
-    setChatHistory([]);
-  };
+  
 
   const doScraping = async () => {
     if (!url) {
@@ -294,14 +283,8 @@ function ChatContent() {
 
           {/* // ------------- Input Box -------------- */}
           <div className="relative flex items-center gap-3 bg-white border-2 border-slate-100 focus-within:border-amber-500 p-2 pl-6 rounded-[1.0rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] transition-all duration-300">
-            {isUrlPasted ? (
-              <button
-                onClick={handleNewChat}
-                className="p-2.5 text-stone-400 hover:text-amber-500 cursor-pointer hover:bg-stone-50 rounded-xl transition-all duration-200 flex items-center justify-center shrink-0 group/newchat"
-                title="New Chat"
-              >
-                <Plus size={20} />
-              </button>
+            {showQuery ? (
+                <Search /> 
             ) :
               (
                 <Globe />
