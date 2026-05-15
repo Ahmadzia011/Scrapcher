@@ -1,6 +1,7 @@
 "use server";
 
 import { Embeder } from "./embedder";
+import Scrapper from "./scrapper";
 import SupaBase from "./supaBase";
 
 
@@ -16,39 +17,48 @@ export async function storer(urlInput: any) {
   let content: string[];
   let origin: string;
 
-  try {
-    const response = await fetch(`${process.env.PYTHON_SERVER}/scrape`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      // Send the URL and page limit as JSON body
-      body: JSON.stringify({ url: urlInput, max_pages: 20 }),
-    });
 
- if (!response.ok) {
-  const err = await response.text();
-  console.error(`Python server error status: ${response.status}`);
-  console.error("Python server error body:", err || "(Empty Response)");
-  return "error";
-}
+  const response = await Scrapper(urlInput)
+  content = response.content
+  origin = response.origin
 
-    // The Python server returns: { origin: "https://...", pages: [{ url, markdown }] }
-    const data = await response.json();
 
-    console.log(data)
 
-    // Extract the base domain (used as the key in our database)
-    origin = data.origin;
 
-    // Extract only the markdown strings from each page object.
-    // The embedder expects a flat array of strings, not objects.
-    content = data.pages.map((page: { url: string; markdown: string }) => page.markdown);
 
-    console.log(`Scraper returned ${content.length} pages for ${origin}`);
+//   try {
+//     const response = await fetch(`${process.env.PYTHON_SERVER}/scrape`, {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       // Send the URL and page limit as JSON body
+//       body: JSON.stringify({ url: urlInput, max_pages: 2 }),
+//     });
+
+//  if (!response.ok) {
+//   const err = await response.text();
+//   console.error(`Python server error status: ${response.status}`);
+//   console.error("Python server error body:", err || "(Empty Response)");
+//   return "error";
+// }
+
+//     // The Python server returns: { origin: "https://...", pages: [{ url, markdown }] }
+//     const data = await response.json();
+
+//     console.log(data)
+
+//     // Extract the base domain (used as the key in our database)
+//     origin = data.origin;
+
+//     // Extract only the markdown strings from each page object.
+//     // The embedder expects a flat array of strings, not objects.
+//     content = data.pages.map((page: { url: string; markdown: string }) => page.markdown);
+
+//     console.log(`Scraper returned ${content.length} pages for ${origin}`);
     
-  } catch (e: any) {
-    console.error("Could not reach Python server:", e.message);
-    return "error";
-  }
+//   } catch (e: any) {
+//     console.error("Could not reach Python server:", e.message);
+//     return "error";
+//   }
 
   // --- STEP 2: Embed and store the scraped content in the database ---
   // This part is unchanged — the Embedder takes the markdown content

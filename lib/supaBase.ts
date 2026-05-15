@@ -10,7 +10,6 @@ export default function SupaBase() {
     const supabase_service_key = process.env.SUPABASE_SERVICE_ROLE_KEY!;
     
     supabaseInstance = createClient(supabase_url, supabase_service_key);
-    console.log("Supabase Client Initialized (Singleton)");
   }
 
   // 3. Always return the same instance

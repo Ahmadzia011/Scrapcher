@@ -41,7 +41,7 @@ function normalizeUrl(rawUrl: string) {
  * THE CRAWLER & SCRAPER
  * This function visits a website, finds all internal links, and extracts content.
  */
-async function crawlAndScrape(startUrl: string, maxPages = 20) {
+async function crawlAndScrape(startUrl: string, maxPages = 2) {
 
   const origin = new URL(startUrl).origin; // The base website (e.g., https://example.com)
   const visited = new Set<string>();       // Keeps track of URLs we already processed
@@ -55,7 +55,7 @@ async function crawlAndScrape(startUrl: string, maxPages = 20) {
     codeBlockStyle: 'fenced'
   });
 
-  // Continue as long as there are URLs in the queue and we haven't hit our limit
+  // Continue as long as ther e are URLs in the queue and we haven't hit our limit
   while (queue.length > 0 && visited.size < maxPages) {
     const currentUrl = queue.shift()!; // Get the next URL from the front of the queue
 
@@ -95,7 +95,7 @@ async function crawlAndScrape(startUrl: string, maxPages = 20) {
         // Convert the "main" HTML content to Markdown
         // This preserves headings, lists, and links which helps AI understand structure.
         const markdown = turndownService.turndown(article.content);
-
+        if (!markdown || markdown.trim() === "") continue;
         results.push(markdown);
       }
 
@@ -133,7 +133,7 @@ async function crawlAndScrape(startUrl: string, maxPages = 20) {
     }
   }
   return { results, origin };
-}
+} 
 
 /**
  * PAGE COMPONENT
@@ -144,6 +144,6 @@ export default async function Scrapper(url: any) {
   const { results, origin } = await crawlAndScrape(url)
   return {
     content: results,
-    url: origin
+    origin
   }
 }

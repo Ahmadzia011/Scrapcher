@@ -1,15 +1,16 @@
-import { GoogleGenerativeAIEmbeddings } from '@langchain/google-genai'
+import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
+
 
 import SupaBase from "./supaBase";
 
 export async function Retriever(url: any, question: any) {
   
-  const embeding_model = new GoogleGenerativeAIEmbeddings({
-    model: "gemini-embedding-001", // Must match embedder.ts — same model = same vector space
-    apiKey: process.env.GOOGLE_API_KEY
-  });
+  const embedding_model = new HuggingFaceInferenceEmbeddings({ 
+        model: "sentence-transformers/all-MiniLM-L6-v2",
+        apiKey: process.env.HUGGINGFACE_API_KEY
+      });
 
-  const vector_query = await embeding_model.embedQuery(question);
+  const vector_query = await embedding_model.embedQuery(question);
   const client = SupaBase();
 
   const { data: top_candidates } = await client.rpc("match_documents", {
