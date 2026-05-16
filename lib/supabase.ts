@@ -3,7 +3,7 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 // 1. Create a variable outside the function to store the single instance
 let supabaseInstance: SupabaseClient | null = null;
 
-export default function SupaBase() {
+export default function supabase() {
   // 2. Only initialize if it doesn't exist yet
   if (!supabaseInstance) {
     const supabase_url = process.env.SUPABASE_URL!;

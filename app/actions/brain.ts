@@ -1,9 +1,9 @@
 "use server";
 import { revalidatePath } from "next/cache";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
-import LLM from "@/lib/LLM";
+import LLM from "@/lib/llm";
 import { Retriever } from "@/lib/retriever";
-import SupaBase from "@/lib/supaBase";
+import SupaBase from "@/lib/supabase";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth";
 

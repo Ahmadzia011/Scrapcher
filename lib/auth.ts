@@ -1,6 +1,6 @@
 import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import SupaBase from "./supaBase";
+import SupaBase from "./supabase";
 
 export const authOptions: NextAuthOptions = {
   providers: [

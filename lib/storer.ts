@@ -2,7 +2,7 @@
 
 import { Embeder } from "./embedder";
 import Scrapper from "./scrapper";
-import SupaBase from "./supaBase";
+import SupaBase from "./supabase";
 
 
 

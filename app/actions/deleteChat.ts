@@ -1,5 +1,5 @@
 "use server";
-import SupaBase from "@/lib/supaBase";
+import SupaBase from "@/lib/supabase";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { revalidatePath } from "next/cache";

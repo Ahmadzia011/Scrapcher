@@ -1,6 +1,6 @@
 "use server";
 
-import SupaBase from "@/lib/supaBase";
+import SupaBase from "@/lib/supabase";
 import { redirect } from "next/navigation";
 
 export async function registerUser(formData: FormData) {
@@ -18,7 +18,7 @@ export async function registerUser(formData: FormData) {
   try {
 
     // 2. Check if user already exists
-    const {data : existingUserData} = await supabase.from('users').select('*').eq('email', email).limit(1)
+    const { data: existingUserData } = await supabase.from('users').select('*').eq('email', email).limit(1)
 
     const existingUser = await existingUserData?.[0]
 
@@ -29,10 +29,10 @@ export async function registerUser(formData: FormData) {
     // 3. Create the user in PostgreSQL
     // Note: In production, wrap 'password' in a hashing function like bcrypt!
     await supabase.from("users").insert({
-    name,
-    email,
-    password,
-  });
+      name,
+      email,
+      password,
+    });
 
 
   } catch (err) {
