@@ -41,7 +41,7 @@ function normalizeUrl(rawUrl: string) {
  * THE CRAWLER & SCRAPER
  * This function visits a website, finds all internal links, and extracts content.
  */
-async function crawlAndScrape(startUrl: string, maxPages = 2) {
+async function crawlAndScrape(startUrl: string, maxPages = 20) {
 
   const origin = new URL(startUrl).origin; // The base website (e.g., https://example.com)
   const visited = new Set<string>();       // Keeps track of URLs we already processed

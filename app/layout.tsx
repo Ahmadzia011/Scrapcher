@@ -15,6 +15,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Scrapcher",
   description: "AI chatbot of every given link.",
+
 };
 
 export default function RootLayout({
