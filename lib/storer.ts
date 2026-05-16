@@ -22,10 +22,6 @@ export async function storer(urlInput: any) {
   content = response.content
   origin = response.origin
 
-
-
-
-
 //   try {
 //     const response = await fetch(`${process.env.PYTHON_SERVER}/scrape`, {
 //       method: "POST",
