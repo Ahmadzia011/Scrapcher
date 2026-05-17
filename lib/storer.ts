@@ -19,7 +19,7 @@ export async function storer(urlInput: any) {
 
 
   try {
-    const response = await fetch(`${process.env.PYTHON_SERVER}/scrape`, {
+    const response = await fetch(`${process.env.PYTHON_SERVER}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       // Send the URL and page limit as JSON body
