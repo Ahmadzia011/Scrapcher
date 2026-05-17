@@ -143,9 +143,7 @@ function ChatContent() {
   let showQuery = !isError && isUrlPasted && !showLoading
 
   // Filter out the summary request from the visible chat history
-  const visibleChatHistory = chatHistory.filter(
-    (chat) => !chat.query.includes("Give me a brief summary of this website in 2-3 sentences")
-  );
+  const visibleChatHistory = chatHistory
 
   return (
     <main className="flex-1 flex flex-col relative overflow-hidden">
@@ -221,16 +219,17 @@ function ChatContent() {
                   {isHistoryLoading ? (
                     <div className="h-3 bg-stone-100 rounded-full w-1/3 animate-pulse m-8" />
                   ) : (
+                    
                     visibleChatHistory.map((chat, index) => (
                       <div key={index} className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                         {/* User Query Bubble */}
-                        <div className="flex justify-end">
+                        {index != 0 && (<div className="flex justify-end">
                           <div className="max-w-[85%] bg-stone-50 border border-stone-200 px-6 py-4 rounded-2xl rounded-tr-none shadow-[0_2px_10px_rgba(0,0,0,0.02)]">
                             <p className="text-[14px] font-bold text-slate-800 leading-relaxed tracking-wide">
                               {chat.query}
                             </p>
                           </div>
-                        </div>
+                        </div>)}
 
                         {/* AI Response Box */}
                         <div className="flex justify-start">
