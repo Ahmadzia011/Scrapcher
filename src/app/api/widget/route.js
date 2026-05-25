@@ -264,6 +264,12 @@ export async function GET(request) {
           query: currentQueryText,
         }),
       });
+      if (response.status !== 200) {
+          throw new Error("Request failed!");
+          state.isThinking = false;
+          }
+      renderMessages();
+      updateInputControlsState();
 
       const data = await response.json();
       state.isThinking = false;
