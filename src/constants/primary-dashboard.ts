@@ -1,5 +1,5 @@
 
-export const scriptUrl = "https://scrapcher.vercel.app/api/widget";
+  export const scriptUrl = "https://scrapcher.vercel.app/api/widget";
 
 export type Status = 'idle' | 'Scraping' | 'Done' | 'Error'
 
@@ -22,7 +22,6 @@ export const defaultWidgetConfig: WidgetConfig = {
   textColor: "#0f172a",
   scriptSnippet: `<script 
       src="" 
-      data-chatbot_id=""
       data-name=""
       data-accent=""
       data-background=""

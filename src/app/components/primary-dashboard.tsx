@@ -20,18 +20,18 @@ export function PrimaryDashboard() {
   const [widget, setWidget] = useState<WidgetConfig>(defaultWidgetConfig)
 
 
-  function buildScript(chatbot_id: string) {
+  function buildScript() {
 
-    return `<script 
+    return `
+    <script 
       src="${scriptUrl}" 
-      data-chatbot_id="${chatbot_id}"
       data-name="${widget.name}"
       data-accent="${widget.accentColor}"
       data-background="${widget.backgroundColor}"
       data-panel="${widget.panelColor}"
       data-text="${widget.textColor}"
       async>
-      </script>`;
+       </script>`;
   }
 
   async function copySnippet() {
@@ -59,7 +59,7 @@ export function PrimaryDashboard() {
       const scrapResult = await Storer(url); //using the old url because useState would update after completion of function
       if (scrapResult == 'error') return setStatus('Error')
       setStatus('Done');
-      setWidget({ ...widget, scriptSnippet: buildScript(scrapResult) });
+      setWidget({ ...widget, scriptSnippet: buildScript() });
 
     } catch (e) {
       console.debug("Error:", e);

@@ -1,17 +1,51 @@
-// import Supabase from '@/src/lib/supabase';
+import Supabase from '@/src/lib/supabase';
+
+const supabase = Supabase();
 
 
 export async function GET(request) {
-  // console.log('request came with origin', request.headers.origin)
+  const incomingReferer = request.headers.get('referer');
+  const incomingOrigin = request.headers.get('origin');
 
-  // const origin = request.headers.get("origin");
-  // const supabase = Supabase()
-  // const isAllowed = await supabase.from('documents').select('id').eq('metadata->>origin', origin)
+  // 1. Declare the variable in the global function scope
+  let clientDomain = '';
 
+  if (incomingOrigin) {
+    clientDomain = incomingOrigin;
+  } else if (incomingReferer) {
+    // 2. Only wrap the URL parser in the try/catch block
+    try {
+      clientDomain = new URL(incomingReferer).origin;
+    } catch (e) {
+      return new Response(JSON.stringify({ error: "Invalid Referer header format." }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+  } else {
+    return new Response(JSON.stringify({ error: "Access Denied: Missing mandatory browser routing identification." }), {
+      status: 403,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
 
-  // if (!isAllowed) {
-  //   return NextResponse.json({ error: "Unauthorized domain configuration." }, { status: 403 });
-  // }
+  // 3. Database Check: clientDomain is now safely accessible here
+  const { data, error } = await supabase
+    .from('documents')
+    .select('id')
+    .eq('metadata->>origin', clientDomain)
+    .limit(1);
+
+  if (error || !data || data.length === 0) {
+    return new Response(JSON.stringify({ error: "Unauthorized domain configuration." }), {
+      status: 403,
+      headers: { 
+        "Content-Type": "application/json",
+        // Echo back CORS even on failure to avoid messy browser console warnings
+        "Access-Control-Allow-Origin": clientDomain 
+      }
+    });
+  }
 
   // The complete widget script represented as a raw text string payload
   const widgetScript = `
@@ -30,7 +64,6 @@ export async function GET(request) {
     console.error("Scrapcher Widget: Script tag not detected correctly.");
   }
 
-  const chatbot_id = scriptTag?.dataset.chatbot_id || "12345";
   const name = scriptTag?.dataset.name || "Assistant";
   const accent = scriptTag?.dataset.accent || "#f59e0b";
   const background = scriptTag?.dataset.background || "#f8fafc";
@@ -73,7 +106,7 @@ export async function GET(request) {
   // 7. Base Core Layout HTML Shell Insertion
   shadowRoot.innerHTML = \`
     <style>\${CSS_STYLES}</style>
-    <div class="fixed-wrapper" data-chatbot-id="\${chatbot_id}">
+    <div class="fixed-wrapper">
       <button type="button" class="launcher-btn" aria-label="Open chat widget">
         \${ICONS.messageCircle}
         <span class="launcher-badge">1</span>
@@ -85,7 +118,7 @@ export async function GET(request) {
             <div class="brand-icon">\${ICONS.globe}</div>
             <div class="brand-meta">
               <h2 class="title-text">\${name}</h2>
-              \${chatbot_id ? \`<p class="subtitle-id">AI Assistant</p>\` : ""}
+              \${<p class="subtitle-id">AI Assistant</p> : ""}
             </div>
           </div>
           <div class="header-actions">

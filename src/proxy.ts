@@ -4,5 +4,5 @@ export default withAuth(function proxy(req) {
 });
 
 export const config = {
-  matcher: ["/"]
+  matcher: ["/", "/test"]
 };

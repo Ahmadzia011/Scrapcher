@@ -9,10 +9,10 @@ import { getServerSession } from "next-auth";
 import LogoutButton from "./logout-button";
 
 // import LogoutButton from "./logout-button";
-import { AuthOptions } from "@/src/lib/auth";
+import { authOptions } from "@/src/lib/auth";
 
 export default async function Navbar() {
-  const session = await getServerSession(AuthOptions);
+  const session = await getServerSession(authOptions);
   const userData = session?.user;
   const user_name = (userData as any)?.name || "User";
   const user_email = (userData as any)?.email;
