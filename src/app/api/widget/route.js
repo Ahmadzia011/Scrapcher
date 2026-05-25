@@ -118,7 +118,7 @@ export async function GET(request) {
             <div class="brand-icon">\${ICONS.globe}</div>
             <div class="brand-meta">
               <h2 class="title-text">\${name}</h2>
-              \${<p class="subtitle-id">AI Assistant</p> : ""}
+              <p class="subtitle-id">AI Assistant</p>
             </div>
           </div>
           <div class="header-actions">
@@ -261,7 +261,6 @@ export async function GET(request) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          chatbot_id: chatbot_id,
           query: currentQueryText,
         }),
       });
