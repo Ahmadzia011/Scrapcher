@@ -1,8 +1,6 @@
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import SupaBase from "../../lib/supabase";
-import { getServerSession } from "next-auth";
-import { AuthOptions } from "@/src/lib/auth";
 import { EmbeddingModel } from "@/src/lib/chat-model";
 
 
