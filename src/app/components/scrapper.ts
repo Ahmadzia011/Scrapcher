@@ -43,6 +43,7 @@ function normalizeUrl(rawUrl: string) {
  */
 async function crawlAndScrape(startUrl: string, maxPages = 20) {
 
+
   const origin = new URL(startUrl).origin; // The base website (e.g., https://example.com)
   const visited = new Set<string>();       // Keeps track of URLs we already processed
   const queue: string[] = [normalizeUrl(startUrl)]; // URLs waiting to be visited
@@ -141,9 +142,14 @@ async function crawlAndScrape(startUrl: string, maxPages = 20) {
  */
 
 export default async function Scrapper(url: any) {
-  const { results, origin } = await crawlAndScrape(url)
-  return {
-    content: results,
-    origin
+  try {
+    const { results, origin } = await crawlAndScrape(url);
+    return {
+      content: results,
+      origin
+    };
+  } catch (error) {
+    console.error("Scraper Error:", error);
+    return null;
   }
 }

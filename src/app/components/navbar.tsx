@@ -3,6 +3,7 @@ import {
   Sparkles,
   User,
   ChevronDown,
+  Plus,
 } from "lucide-react";
 import { getServerSession } from "next-auth";
 import LogoutButton from "./logout-button";
@@ -33,7 +34,14 @@ export default async function Navbar() {
           </div>
 
           {/* RIGHT SECTION: Global Actions */}
-          <div className="flex items-center gap-6 shrink-0">
+          <div className="flex items-center gap-20 shrink-0">
+            <a
+              href="/"
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-sm transition-all shadow-lg shadow-amber-500/20 active:scale-[0.98]"
+            >
+              <Plus size={16} strokeWidth={3} />
+              New Chat
+            </a>
             {/* Profile */}
             <div className="relative group">
               <div className="flex items-center gap-3 cursor-pointer h-16 group/profile">
