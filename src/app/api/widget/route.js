@@ -222,7 +222,7 @@ export async function GET(request) {
     updateInputControlsState();
 
     try {
-      const response = await fetch("http://localhost:3000/api/chat", {
+      const response = await fetch("https://scrapcher.vercel.app/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
