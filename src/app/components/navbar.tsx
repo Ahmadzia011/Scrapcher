@@ -5,11 +5,13 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
-import LogoutButton from "./LogoutButton";
+import LogoutButton from "./logout-button";
+
+// import LogoutButton from "./logout-button";
+import { AuthOptions } from "@/src/lib/auth";
 
 export default async function Navbar() {
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(AuthOptions);
   const userData = session?.user;
   const user_name = (userData as any)?.name || "User";
   const user_email = (userData as any)?.email;

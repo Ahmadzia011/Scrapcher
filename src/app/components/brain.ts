@@ -1,38 +1,14 @@
-"use server";
-import { revalidatePath } from "next/cache";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
-import LLM from "@/lib/llm";
-import { Retriever } from "@/lib/retriever";
-import SupaBase from "@/lib/supabase";
-import { authOptions } from "@/lib/auth";
-import { getServerSession } from "next-auth";
+import LLM from "@/src/lib/chat-model";
+import { Retriever } from "@/src/app/components/retriever";
 
-export async function Brain(url: any, question: any) {
+export async function Brain(chatbot_id: any, question: any) {
   console.log("Recieved the request");
-  revalidatePath("/"); // Trigger immediate refresh of Navbar and other server components
 
-  const session = await getServerSession(authOptions)
-  const supabase = SupaBase();
-  const user = session?.user
-  const user_id = (user as any)?.id
+  console.log(chatbot_id, question)
+  const top_candidates: any = await Retriever(chatbot_id, question);
 
-
-  // Normalize URL to origin for database consistency
-  let normalizedUrl = url;
-  try {
-    normalizedUrl = new URL(url).origin;
-  } catch (e) {
-    console.warn("Invalid URL in Brain, using raw:", url);
-  }
-
-  const { data: existing_chat } = await supabase.from("chats")
-    .select('query, ai_response, created_at')
-    .eq('session_id', normalizedUrl)
-    .order('created_at', { ascending: false })
-    .limit(5)
-  const chat_history = JSON.stringify(existing_chat)
-
-  const top_candidates: any = await Retriever(normalizedUrl, question);
+  
   const contentList = top_candidates?.map(
     (candidate: { content: any }) => candidate.content,
   );
@@ -64,10 +40,6 @@ export async function Brain(url: any, question: any) {
     {context}
     </context>
 
-    <chat_history>
-    {chat_history}
-    </chat_history>
-
     ### FORMATTING & LANGUAGE
     - NON-ENGLISH SOURCE: If <context> is not English, translate the answer to English and append "(Original Language: [Name])".
     - TIME FORMAT: Always use 12-hour format (e.g., 11:45 AM).
@@ -81,21 +53,10 @@ export async function Brain(url: any, question: any) {
   const formattedPrompt = await prompt.invoke({
     context: contentList.join("\n\n"),
     question,
-    chat_history
   });
 
   const ai_response = await llm.invoke(formattedPrompt);
 
 
-  const { error } = await supabase.from("chats").insert({
-    query: question,
-    ai_response: ai_response.content,
-    session_id: normalizedUrl,
-    user_id
-  });
-
-  if (error) {
-    console.error('Error in insertion!', error)
-  }
   return ai_response.content;
 }

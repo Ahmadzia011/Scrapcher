@@ -1,12 +1,12 @@
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
+import { AuthOptions } from "@/src/lib/auth";
 import Link from "next/link";
-import SupaBase from "@/lib/supabase";
+import SupaBase from "@/src/lib/supabase";
 import { Clock, MessageSquare, Plus } from "lucide-react";
 
 export default async function SideBar() {
   const supabase = SupaBase();
-  const session = await getServerSession(authOptions);
+  const session = await getServerSession(AuthOptions);
   const userData = session?.user;
   const user_id = (userData as any)?.id;
 

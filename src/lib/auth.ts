@@ -2,7 +2,7 @@ import { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import SupaBase from "./supabase";
 
-export const authOptions: NextAuthOptions = {
+export const AuthOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",

@@ -1,29 +1,27 @@
 "use server";
 
-import { Embeder } from "./embedder";
-import Scrapper from "./scrapper";
-import SupaBase from "./supabase";
+import crypto from 'crypto';
+import Scrapper from '../components/scrapper';
+import { Embeder } from '../components/embedder';
+import Supabase from '@/src/lib/supabase';
 
 
 
-export async function storer(urlInput: any) {
+export async function hashString(url: string) {
+  return crypto.createHash('sha256').update(url).digest('hex');
+}
 
-  console.log("Calling Python scraper for:", urlInput);
+export async function Storer(urlInput: any) {
 
-  // --- STEP 1: Ask the Python server to scrape the website ---
-  // We send a POST request to /scrape with the URL we want to crawl.
-  // The Python server uses crawl4ai (with a real browser) to handle
-  // JavaScript-rendered sites that our simple fetch() scraper missed.
   let content: string[];
   let origin: string;
-
 
   try {
     const response = await fetch(`${process.env.PYTHON_SERVER}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       // Send the URL and page limit as JSON body
-      body: JSON.stringify({ url: urlInput, max_pages: 2 }),
+      body: JSON.stringify({ url: urlInput, max_pages: 20 }),
     });
 
     if (!response.ok) {
@@ -63,23 +61,23 @@ export async function storer(urlInput: any) {
     console.log(`Local scraper returned ${content.length} pages for ${origin}`);
   }
 
+  const chatbot_id = await hashString(origin)
+
   // --- STEP 2: Embed and store the scraped content in the database ---
   // This part is unchanged — the Embedder takes the markdown content
   // and stores it as vector embeddings in Supabase for AI retrieval.
+
   try {
-    const results = await Embeder(content, origin);
-    if (results) {
-      return "error";
-    }
+    await Embeder(content, urlInput, chatbot_id);
+    console.log("Embedded successfully.");
+    return chatbot_id
   } catch (e: any) {
     return "error";
   }
-
-  console.log("Embedded successfully.");
 }
 
-export async function isUrlScraped(urlInput: string) {
-  const supabase = SupaBase();
+export async function isUrlScraped(urlInput: string | URL) {
+  const supabase = Supabase();
 
   let normalizedUrl = urlInput;
   try {
@@ -89,7 +87,7 @@ export async function isUrlScraped(urlInput: string) {
   const found_data = await supabase
     .from("documents")
     .select("metadata")
-    .eq("metadata->>source_url", normalizedUrl);
+    .eq("metadata->>source_url", normalizedUrl)
 
-  return (found_data.data?.length);
+  return found_data.data?.length || 0;
 }

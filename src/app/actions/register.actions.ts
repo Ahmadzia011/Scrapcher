@@ -1,6 +1,6 @@
 "use server";
 
-import SupaBase from "@/lib/supabase";
+import SupaBase from "@/src/lib/supabase";
 import { redirect } from "next/navigation";
 
 export async function registerUser(formData: FormData) {

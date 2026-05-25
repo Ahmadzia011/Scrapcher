@@ -1,17 +1,15 @@
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
-import SupaBase from "./supabase";
+import SupaBase from "../../lib/supabase";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./auth";
-import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
+import { AuthOptions } from "@/src/lib/auth";
+import { EmbeddingModel } from "@/src/lib/chat-model";
 
 
 
-export async function Embeder(dataset: any, url: any) {
+export async function Embeder(dataset: any, url: any, chatbot_id: string) {
 
-  const session = await getServerSession(authOptions);
-  const user_id = (session?.user as any)?.id;
-
+  const origin = new URL(url).origin
   console.log("Embeder is called");
   const client = SupaBase();
   // It initializes the object Recursive text splitter
@@ -24,10 +22,10 @@ export async function Embeder(dataset: any, url: any) {
     throw new Error("Site has no data.");
   }
 
-  const embedding_model = new HuggingFaceInferenceEmbeddings({
-    model: "sentence-transformers/all-MiniLM-L6-v2", // More compatible with free Inference API
-    apiKey: process.env.HUGGINGFACE_API_KEY
-  });
+
+  const embedding_model = EmbeddingModel()
+
+
 
   for (const data of dataset) {
 
@@ -40,7 +38,7 @@ export async function Embeder(dataset: any, url: any) {
 
       const vector_store = await SupabaseVectorStore.fromTexts(
         validDocs, // List of string (docs) to convert in vector and then store in vector db.
-        validDocs.map(() => ({ source_url: url })), // Maps each doc to a metadata object
+        validDocs.map(() => ({ source_url: url, chatbot_id: chatbot_id, origin })), // Maps each doc to a metadata object
         embedding_model, //Model that will be used to convert strings to vector.
         {
           client,
@@ -50,15 +48,10 @@ export async function Embeder(dataset: any, url: any) {
       );
     }
     catch (e) {
-      console.error(e)
-      const { error: chatError } = await SupaBase()
-        .from("documents")
-        .delete()
-        .eq("session_id", origin)
-        .eq("user_id", user_id);
-      return "error"
+      console.error("Embedding error:", e);
+      throw new Error("Embedding failed.");
     }
   }
 
-  console.log("Embeding done");
+  console.log("Embedding done");
 }
