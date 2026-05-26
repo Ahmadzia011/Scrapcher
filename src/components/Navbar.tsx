@@ -6,16 +6,14 @@ import {
   Plus,
 } from "lucide-react";
 import { getServerSession } from "next-auth";
-import LogoutButton from "./logout-button";
-
-// import LogoutButton from "./logout-button";
+import LogoutButton from "./ui/LogoutButton";
 import { authOptions } from "@/src/lib/auth";
 
 export default async function Navbar() {
   const session = await getServerSession(authOptions);
   const userData = session?.user;
-  const user_name = (userData as any)?.name || "User";
-  const user_email = (userData as any)?.email;
+  const userName = (userData as any)?.name || "User";
+  const userEmail = (userData as any)?.email;
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200/60 bg-[#FDFCFB]/90 backdrop-blur-md">
@@ -47,10 +45,10 @@ export default async function Navbar() {
               <div className="flex items-center gap-3 cursor-pointer h-16 group/profile">
                 <div className="flex flex-col items-end shrink-0 select-none">
                   <span className="text-sm font-bold text-slate-900 leading-none mb-1 group-hover/profile:text-amber-600 transition-colors">
-                    {user_name}
+                    {userName}
                   </span>
                   <span className="text-[11px] text-slate-400 font-medium tracking-tight leading-none">
-                    {user_email}
+                    {userEmail}
                   </span>
                 </div>
 

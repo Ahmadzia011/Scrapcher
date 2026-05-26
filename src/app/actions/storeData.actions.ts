@@ -1,8 +1,8 @@
 "use server";
 
 import crypto from 'crypto';
-import Scrapper from '../components/scrapper';
-import { Embeder } from '../components/embedder';
+import scrapper from '../../lib/rag/scraper';
+import { embedData } from '@/src/lib/rag/embedder';
 import Supabase from '@/src/lib/supabase';
 
 
@@ -11,7 +11,7 @@ export async function hashString(url: string) {
   return crypto.createHash('sha256').update(url).digest('hex');
 }
 
-export async function Storer(urlInput: any) {
+export async function storeData(urlInput: any) {
 
   let content: string[];
   let origin: string;
@@ -50,7 +50,7 @@ export async function Storer(urlInput: any) {
   } catch (e: any) {
     console.error("Python scraper failed, falling back to local scraper:", e.message);
 
-    const fallback = await Scrapper(urlInput);
+    const fallback = await scrapper(urlInput);
     if (!fallback?.content || !fallback?.origin) {
       console.error("Fallback scraper failed or returned no content.");
       return "error";
@@ -61,16 +61,16 @@ export async function Storer(urlInput: any) {
     console.log(`Local scraper returned ${content.length} pages for ${origin}`);
   }
 
-  const chatbot_id = await hashString(origin)
+  const chatbotId = await hashString(origin)
 
   // --- STEP 2: Embed and store the scraped content in the database ---
   // This part is unchanged — the Embedder takes the markdown content
   // and stores it as vector embeddings in Supabase for AI retrieval.
 
   try {
-    await Embeder(content, urlInput, chatbot_id);
+    await embedData(content, urlInput, chatbotId);
     console.log("Embedded successfully.");
-    return chatbot_id
+    return chatbotId
   } catch (e: any) {
     return "error";
   }
@@ -84,10 +84,10 @@ export async function isUrlScraped(urlInput: string | URL) {
     normalizedUrl = new URL(urlInput).origin;
   } catch (e) { }
 
-  const found_data = await supabase
+  const foundData = await supabase
     .from("documents")
     .select("metadata")
-    .eq("metadata->>source_url", normalizedUrl)
+    .eq("metadata->>sourceUrl", normalizedUrl)
 
-  return found_data.data?.length || 0;
+  return foundData.data?.length || 0;
 }

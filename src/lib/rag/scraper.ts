@@ -1,5 +1,3 @@
-"use server";
-
 import { JSDOM } from "jsdom";
 import { Readability } from "@mozilla/readability";
 import TurndownService from "turndown";
@@ -17,7 +15,6 @@ const SKIPPED_EXTENSIONS = [
 /**
  * DATA STRUCTURE: What we want to keep from each page.
  */
-
 
 /**
  * UTILITY: Cleans up a URL.
@@ -141,7 +138,7 @@ async function crawlAndScrape(startUrl: string, maxPages = 20) {
  * Renders the results of the crawl.
  */
 
-export default async function Scrapper(url: any) {
+export default async function scrapeUrl(url: any) {
   try {
     const { results, origin } = await crawlAndScrape(url);
     return {

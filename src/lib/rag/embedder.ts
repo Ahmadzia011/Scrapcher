@@ -1,15 +1,15 @@
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
-import SupaBase from "../../lib/supabase";
-import { EmbeddingModel } from "@/src/lib/chat-model";
+import supabase from "../supabase";
+import { embeddingModel } from "@/src/lib/chat-model";
 
 
 
-export async function Embeder(dataset: any, url: any, chatbot_id: string) {
+export async function embedData(dataset: any, url: any, chatbotId: string) {
 
   const origin = new URL(url).origin
-  console.log("Embeder is called");
-  const client = SupaBase();
+  console.log("Embedder is called");
+  const client = supabase();
   // It initializes the object Recursive text splitter
   const textSplitter = new RecursiveCharacterTextSplitter({
     chunkSize: 500,
@@ -21,7 +21,7 @@ export async function Embeder(dataset: any, url: any, chatbot_id: string) {
   }
 
 
-  const embedding_model = EmbeddingModel()
+  const embeddingModelInstance = embeddingModel()
 
 
 
@@ -34,10 +34,10 @@ export async function Embeder(dataset: any, url: any, chatbot_id: string) {
       const validDocs = docs.filter(doc => doc && doc.trim().length > 0);
       if (validDocs.length === 0) continue;
 
-      const vector_store = await SupabaseVectorStore.fromTexts(
+      const vectorStore = await SupabaseVectorStore.fromTexts(
         validDocs, // List of string (docs) to convert in vector and then store in vector db.
-        validDocs.map(() => ({ source_url: url, chatbot_id: chatbot_id, origin })), // Maps each doc to a metadata object
-        embedding_model, //Model that will be used to convert strings to vector.
+        validDocs.map(() => ({ sourceUrl: url, chatbotId: chatbotId, origin })), // Maps each doc to a metadata object
+        embeddingModelInstance, //Model that will be used to convert strings to vector.
         {
           client,
           tableName: "documents", // Table to work on

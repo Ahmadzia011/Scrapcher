@@ -1,6 +1,6 @@
 "use client";
 
-import { registerUser } from "../actions/register.actions";
+import { registerUser } from "../actions/registerUser.actions";
 import { useState } from "react";
 import Link from "next/link";
 

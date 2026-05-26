@@ -1,27 +1,23 @@
 "use client";
 
 import { useState } from "react";
-import { Storer, isUrlScraped } from "../actions/store-data.actions";
+import { storeData } from "../app/actions/storeData.actions";
 import {
   WidgetConfig,
   defaultWidgetConfig,
   scriptUrl,
   Status
-}
-  from "@/src/constants/primary-dashboard";
+} from '../constants/primary-dashboard.constants'
 import { Check } from "lucide-react";
 
 export function PrimaryDashboard() {
-
-  const [status, setStatus] = useState<Status>('idle')
+  const [status, setStatus] = useState<Status>("idle");
   const [url, setUrl] = useState<string>("");
   const [newUrl, setNewUrl] = useState<string>("");
-  const [snippetCopy, setSnippetCopy] = useState<Boolean>(false)
-  const [widget, setWidget] = useState<WidgetConfig>(defaultWidgetConfig)
-
+  const [snippetCopy, setSnippetCopy] = useState<Boolean>(false);
+  const [widget, setWidget] = useState<WidgetConfig>(defaultWidgetConfig);
 
   function buildScript() {
-
     return `
     <script 
       src="${scriptUrl}" 
@@ -35,18 +31,18 @@ export function PrimaryDashboard() {
   }
 
   async function copySnippet() {
-    await navigator.clipboard.writeText(widget.scriptSnippet)
-    setSnippetCopy(true)
-    setTimeout(() => setSnippetCopy(false), 2000)
+    await navigator.clipboard.writeText(widget.scriptSnippet);
+    setSnippetCopy(true);
+    setTimeout(() => setSnippetCopy(false), 2000);
   }
   async function doScraping() {
     if (!url.trim()) return;
-    setNewUrl(url)
-    setUrl('')
+    setNewUrl(url);
+    setUrl("");
     try {
       new URL(url);
     } catch {
-      setStatus('Error')
+      setStatus("Error");
       return;
     }
 
@@ -55,12 +51,11 @@ export function PrimaryDashboard() {
       //   setResultStatus('Site is already scrapped')
       //   return
       // }
-      setStatus('Scraping')
-      const scrapResult = await Storer(url); //using the old url because useState would update after completion of function
-      if (scrapResult == 'error') return setStatus('Error')
-      setStatus('Done');
+      setStatus("Scraping");
+      const scrapResult = await storeData(url); //using the old url because useState would update after completion of function
+      if (scrapResult === "error") return setStatus("Error");
+      setStatus("Done");
       setWidget({ ...widget, scriptSnippet: buildScript() });
-
     } catch (e) {
       console.debug("Error:", e);
     }
@@ -106,7 +101,7 @@ export function PrimaryDashboard() {
                   </label>
                   <button
                     onClick={doScraping}
-                    disabled={status != 'idle'}
+                    disabled={status != "idle"}
                     className="inline-flex items-center self-end justify-center gap-2 rounded-3xl bg-amber-500 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 transition hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     Analyze
@@ -120,7 +115,9 @@ export function PrimaryDashboard() {
                     </span>
                     <input
                       value={widget.name}
-                      onChange={(e) => setWidget({ ...widget, name: e.target.value })}
+                      onChange={(e) =>
+                        setWidget({ ...widget, name: e.target.value })
+                      }
                       placeholder="Scrapcher Assistant"
                       className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-amber-500"
                     />
@@ -131,60 +128,97 @@ export function PrimaryDashboard() {
                       <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-slate-200 ring-2 ring-transparent transition group-hover:ring-amber-200 shadow-sm">
                         <input
                           value={widget.accentColor}
-                          onChange={(e) => setWidget({ ...widget, accentColor: e.target.value })}
+                          onChange={(e) =>
+                            setWidget({
+                              ...widget,
+                              accentColor: e.target.value,
+                            })
+                          }
                           type="color"
                           className="h-14 w-14 -translate-x-2 -translate-y-2 cursor-pointer bg-transparent"
                         />
                       </div>
-                      <span className="text-xs font-semibold text-slate-600">Accent</span>
+                      <span className="text-xs font-semibold text-slate-600">
+                        Accent
+                      </span>
                     </label>
 
                     <label className="flex flex-col items-center gap-2 cursor-pointer group">
                       <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-slate-200 ring-2 ring-transparent transition group-hover:ring-amber-200 shadow-sm">
                         <input
                           value={widget.backgroundColor}
-                          onChange={(e) => setWidget({ ...widget, backgroundColor: e.target.value })}
+                          onChange={(e) =>
+                            setWidget({
+                              ...widget,
+                              backgroundColor: e.target.value,
+                            })
+                          }
                           type="color"
                           className="h-14 w-14 -translate-x-2 -translate-y-2 cursor-pointer bg-transparent"
                         />
                       </div>
-                      <span className="text-xs font-semibold text-slate-600">Background</span>
+                      <span className="text-xs font-semibold text-slate-600">
+                        Background
+                      </span>
                     </label>
 
                     <label className="flex flex-col items-center gap-2 cursor-pointer group">
                       <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-slate-200 ring-2 ring-transparent transition group-hover:ring-amber-200 shadow-sm">
                         <input
                           value={widget.panelColor}
-                          onChange={(e) => setWidget({ ...widget, panelColor: e.target.value })}
+                          onChange={(e) =>
+                            setWidget({ ...widget, panelColor: e.target.value })
+                          }
                           type="color"
                           className="h-14 w-14 -translate-x-2 -translate-y-2 cursor-pointer bg-transparent"
                         />
                       </div>
-                      <span className="text-xs font-semibold text-slate-600">Panel</span>
+                      <span className="text-xs font-semibold text-slate-600">
+                        Panel
+                      </span>
                     </label>
 
                     <label className="flex flex-col items-center gap-2 cursor-pointer group">
                       <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-slate-200 ring-2 ring-transparent transition group-hover:ring-amber-200 shadow-sm">
                         <input
                           value={widget.textColor}
-                          onChange={(e) => setWidget({ ...widget, textColor: e.target.value })}
+                          onChange={(e) =>
+                            setWidget({ ...widget, textColor: e.target.value })
+                          }
                           type="color"
                           className="h-14 w-14 -translate-x-2 -translate-y-2 cursor-pointer bg-transparent"
                         />
                       </div>
-                      <span className="text-xs font-semibold text-slate-600">Text</span>
+                      <span className="text-xs font-semibold text-slate-600">
+                        Text
+                      </span>
                     </label>
                   </div>
                 </div>
-
               </div>
             </div>
           ) : status == "Scraping" ? (
             <div className="rounded-[2rem] border border-emerald-200 bg-emerald-50 p-8 shadow-lg shadow-emerald-200/50">
               <div className="flex items-center gap-3 px-2 py-4 text-sm text-emerald-700">
-                <svg className="h-5 w-5 animate-spin text-emerald-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                <svg
+                  className="h-5 w-5 animate-spin text-emerald-500"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
+                  ></path>
                 </svg>
                 <span>Scraping in progress…</span>
               </div>
@@ -192,13 +226,28 @@ export function PrimaryDashboard() {
           ) : status == "Error" ? (
             <div className="rounded-[2rem] border border-red-200 bg-red-50 p-8 shadow-lg shadow-red-200/50">
               <div className="flex flex-col items-center gap-4 py-4 text-center">
-                <svg className="h-10 w-10 text-red-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+                <svg
+                  className="h-10 w-10 text-red-400"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth="1.5"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"
+                  />
                 </svg>
-                <p className="text-sm font-semibold text-red-700">Something went wrong</p>
-                <p className="text-xs text-red-500">Please check the URL and try again.</p>
+                <p className="text-sm font-semibold text-red-700">
+                  Something went wrong
+                </p>
+                <p className="text-xs text-red-500">
+                  Please check the URL and try again.
+                </p>
                 <button
-                  onClick={() => setStatus('idle')}
+                  onClick={() => setStatus("idle")}
                   className="mt-2 inline-flex items-center gap-2 rounded-2xl bg-red-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-600"
                 >
                   Try again
@@ -219,10 +268,11 @@ export function PrimaryDashboard() {
                   </div>
                   <button
                     onClick={copySnippet}
-                    className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-semibold shadow-sm border transition hover:cursor-pointer ${snippetCopy
-                      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                      : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
-                      }`}
+                    className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-semibold shadow-sm border transition hover:cursor-pointer ${
+                      snippetCopy
+                        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                        : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+                    }`}
                   >
                     {snippetCopy ? (
                       <>

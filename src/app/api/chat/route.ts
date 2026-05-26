@@ -1,4 +1,4 @@
-import { Brain } from "../../components/brain";
+import { getResponse } from "@/src/lib/rag/rag";
 import Supabase from "@/src/lib/supabase";
 import crypto from "crypto";
 
@@ -61,10 +61,10 @@ export async function POST(request: Request) {
     const body = await request.json();
     const query = body.query;
 
-    // Dynamically compute the chatbot_id from the verified browser origin
-    const chatbot_id = crypto.createHash("sha256").update(origin).digest("hex");
+    // Dynamically compute the chatbotId from the verified browser origin
+    const chatbotId = crypto.createHash("sha256").update(origin).digest("hex");
 
-    const responseData = await Brain(chatbot_id, query);
+    const responseData = await getResponse(chatbotId, query);
 
     return new Response(JSON.stringify(responseData), {
       status: 200,

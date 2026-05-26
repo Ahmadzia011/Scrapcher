@@ -1,7 +1,6 @@
 // app/page.tsx
-import Navbar from './components/navbar';
-import { PrimaryDashboard } from './components/primary-dashboard';
-
+import Navbar from '../components/Navbar';
+import { PrimaryDashboard } from '../components/PrimaryDashboard';
 
 export default function Page() {
   return (
