@@ -1,4 +1,4 @@
-import { getResponse } from "@/src/lib/rag/rag";
+import { getResponse } from "@/src/lib/rag/responseGenerator";
 import Supabase from "@/src/lib/supabase";
 import crypto from "crypto";
 
@@ -60,6 +60,16 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const query = body.query;
+
+    if (!query || typeof query !== "string" || query.trim() === "") {
+      return new Response(JSON.stringify({ error: "A valid 'query' string is required in the body." }), {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": origin,
+        },
+      });
+    }
 
     // Dynamically compute the chatbotId from the verified browser origin
     const chatbotId = crypto.createHash("sha256").update(origin).digest("hex");

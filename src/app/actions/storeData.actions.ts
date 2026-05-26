@@ -60,6 +60,7 @@ export async function storeData(urlInput: any) {
     origin = fallback.origin;
     console.log(`Local scraper returned ${content.length} pages for ${origin}`);
   }
+	
 
   const chatbotId = await hashString(origin)
 

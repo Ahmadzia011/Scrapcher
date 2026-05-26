@@ -9,8 +9,11 @@ export async function getResponse(chatbotId: any, question: any) {
   console.log(chatbotId, question)
   const topCandidates: any = await retrieveData(chatbotId, question);
 
-  
-  const contentList = topCandidates?.map(
+  if (!topCandidates || topCandidates.length === 0) {
+    return "I cannot answer this due to insufficient context.";
+  }
+
+  const contentList = topCandidates.map(
     (candidate: { content: any }) => candidate.content,
   );
 

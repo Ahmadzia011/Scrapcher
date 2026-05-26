@@ -17,7 +17,11 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials?.password) return null;
 
         // 1. Find user in Database
-        const { data: userData } = await supabase.from("users").select('*').eq('email', credentials?.email).limit(1)
+        const { data: userData, error: selectError } = await supabase.from("users").select('*').eq('email', credentials?.email).limit(1)
+        if (selectError) {
+          console.error("Auth select error:", selectError);
+          return null;
+        }
         const user = userData?.[0]
         // 2. Check if user exists and password matches
         // Security Note: Use bcrypt.compare(credentials.password, user.password) here later

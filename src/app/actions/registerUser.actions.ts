@@ -18,9 +18,14 @@ export async function registerUser(formData: FormData) {
   try {
 
     // 2. Check if user already exists
-    const { data: existingUserData } = await supabase.from('users').select('*').eq('email', email).limit(1)
+    const { data: existingUserData, error: selectError } = await supabase.from('users').select('*').eq('email', email).limit(1)
 
-    const existingUser = await existingUserData?.[0]
+    if (selectError) {
+      console.error("Supabase select error:", selectError);
+      return { error: "Something went wrong while checking your email." };
+    }
+
+    const existingUser = existingUserData?.[0]
 
     if (existingUser) {
       return { error: "A user with this email already exists." };
@@ -28,12 +33,16 @@ export async function registerUser(formData: FormData) {
 
     // 3. Create the user in PostgreSQL
     // Note: In production, wrap 'password' in a hashing function like bcrypt!
-    await supabase.from("users").insert({
+    const { error: insertError } = await supabase.from("users").insert({
       name,
       email,
       password,
     });
 
+    if (insertError) {
+      console.error("Supabase insert error:", insertError);
+      return { error: "Failed to create your account. Please try again." };
+    }
 
   } catch (err) {
     console.error("Signup Error:", err);

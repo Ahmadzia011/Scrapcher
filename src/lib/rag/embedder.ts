@@ -16,7 +16,7 @@ export async function embedData(dataset: any, url: any, chatbotId: string) {
     chunkOverlap: 50,
   });
 
-  if (dataset == undefined) {
+  if (!dataset || dataset.length === 0) {
     throw new Error("Site has no data.");
   }
 
