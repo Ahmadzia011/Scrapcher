@@ -33,7 +33,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: '/login',
+    signIn: '/register',
   },
   session: { strategy: "jwt" },
   callbacks: {

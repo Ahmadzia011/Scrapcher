@@ -8,7 +8,7 @@ export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  async function clientAction(formData: FormData) {
+  async function handleSubmit(formData: FormData) {
     setIsLoading(true);
     setError(null);
     const result = await registerUser(formData);
@@ -30,7 +30,7 @@ export default function RegisterPage() {
           </p>
         </div>
 
-        <form action={clientAction}>
+        <form action={handleSubmit}>
           {error && (
             <div className="mb-6 p-3 bg-red-50 text-red-600 text-sm rounded-lg flex items-start gap-2">
               <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />

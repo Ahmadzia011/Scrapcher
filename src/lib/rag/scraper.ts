@@ -38,9 +38,9 @@ function normalizeUrl(rawUrl: string) {
  * THE CRAWLER & SCRAPER
  * This function visits a website, finds all internal links, and extracts content.
  */
-async function crawlAndScrape(startUrl: string, maxPages = 20) {
+async function crawlAndScrape(startUrl: string) {
 
-
+  const maxPages = 20;
   const origin = new URL(startUrl).origin; // The base website (e.g., https://example.com)
   const visited = new Set<string>();       // Keeps track of URLs we already processed
   const queue: string[] = [normalizeUrl(startUrl)]; // URLs waiting to be visited
@@ -79,14 +79,13 @@ async function crawlAndScrape(startUrl: string, maxPages = 20) {
       if (!contentType.includes("text/html")) continue;
 
       const html = await response.text();
-
       // 3. PARSE HTML using JSDOM
       const dom = new JSDOM(html, { url: currentUrl });
-      const document = dom.window.document;
+      const doc = dom.window.document;
 
-      // 4. SCRAPE CONTENT using Readability
+      // 4. SCRAPE CONTENT using Readability  
       // Readability finds the "main" content and ignores sidebars/ads.
-      const reader = new Readability(document);
+      const reader = new Readability(doc);
       const article: any = reader.parse();
 
       if (article) {
@@ -98,19 +97,49 @@ async function crawlAndScrape(startUrl: string, maxPages = 20) {
       }
 
       // 5. FIND NEW LINKS (Crawl part)
-      // Updated link finding section inside crawlAndScrape()
-      const anchors = Array.from(document.querySelectorAll("a"));
-      console.log(`Found ${anchors.length} total links on ${currentUrl}`);
+      // Gather anchors from the raw document and also from Readability's
+      // extracted `article.content` (some links may only be in the main content).
+      let anchors = Array.from(doc.querySelectorAll("a"));
+      console.log(`Found ${anchors.length} raw <a> tags on ${currentUrl}`);
+
+      if (article && article.content) {
+        try {
+          const contentDom = new JSDOM(article.content, { url: currentUrl });
+          const contentAnchors = Array.from(contentDom.window.document.querySelectorAll("a"));
+          console.log(`Found ${contentAnchors.length} links inside Readability article.content`);
+          anchors = anchors.concat(contentAnchors);
+        } catch (e) {
+          // ignore
+        }
+      }
+
+      // Normalize and dedupe anchor candidates by their raw href attribute
+      const seen = new Set<string>();
+      const candidates: HTMLAnchorElement[] = [];
 
       for (const anchor of anchors) {
-        const href = anchor.href;
-        if (!href) continue;
+        // Prefer the raw attribute value — `anchor.href` can be empty for some JS-driven links
+        const rawHref = anchor.getAttribute("href") || anchor.getAttribute("data-href") || anchor.href || "";
+        if (!rawHref) continue;
+
+        // Skip fragments and javascript pseudo-links
+        if (rawHref.startsWith("#") || rawHref.trim().toLowerCase().startsWith("javascript:")) continue;
+
+        if (seen.has(rawHref)) continue;
+        seen.add(rawHref);
+        candidates.push(anchor);
+      }
+
+      console.log(`After filtering, ${candidates.length} anchor candidates on ${currentUrl}`);
+
+      for (const anchor of candidates) {
+        const hrefAttr = anchor.getAttribute("href") || anchor.getAttribute("data-href") || anchor.href || "";
+        if (!hrefAttr) continue;
 
         try {
-          const resolved = new URL(href, currentUrl);
+          const resolved = new URL(hrefAttr, currentUrl);
           const normalized = normalizeUrl(resolved.toString());
 
-          // Check why a link might be skipped:
           const isInternal = resolved.origin === origin;
           const isPage = !SKIPPED_EXTENSIONS.some(ext => resolved.pathname.toLowerCase().endsWith(ext));
           const isNew = !visited.has(normalized) && !queue.includes(normalized);
@@ -118,11 +147,10 @@ async function crawlAndScrape(startUrl: string, maxPages = 20) {
           if (isInternal && isPage && isNew) {
             queue.push(normalized);
           } else if (normalized.includes("our-team")) {
-            // SPECIAL LOG: If we found "our-team" but skipped it, tell us why!
             console.log(`Found 'our-team' but skipped: Internal=${isInternal}, IsPage=${isPage}, IsNew=${isNew}`);
           }
         } catch (e) {
-          // skip
+          // skip invalid URLs
         }
       }
 
@@ -131,13 +159,11 @@ async function crawlAndScrape(startUrl: string, maxPages = 20) {
     }
   }
   return { results, origin };
-} 
-
+}
 /**
  * PAGE COMPONENT
  * Renders the results of the crawl.
  */
-
 export default async function scrapeUrl(url: any) {
   try {
     const { results, origin } = await crawlAndScrape(url);
