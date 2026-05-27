@@ -60,6 +60,7 @@ export async function POST(request: Request) {
   try {
     const body = await request.json();
     const query = body.query;
+    const history = body.history || [];
 
     if (!query || typeof query !== "string" || query.trim() === "") {
       return new Response(JSON.stringify({ error: "A valid 'query' string is required in the body." }), {
@@ -74,7 +75,7 @@ export async function POST(request: Request) {
     // Dynamically compute the chatbotId from the verified browser origin
     const chatbotId = crypto.createHash("sha256").update(origin).digest("hex");
 
-    const responseData = await getResponse(chatbotId, query);
+    const responseData = await getResponse(chatbotId, query, history);
 
     return new Response(JSON.stringify(responseData), {
       status: 200,

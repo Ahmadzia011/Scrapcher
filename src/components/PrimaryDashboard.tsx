@@ -35,7 +35,8 @@ export function PrimaryDashboard() {
     setSnippetCopy(true);
     setTimeout(() => setSnippetCopy(false), 2000);
   }
-  async function doScraping() {
+  async function doScraping(e?: React.FormEvent) {
+    if (e) e.preventDefault();
     if (!url.trim()) return;
     setNewUrl(url);
     setUrl("");
@@ -57,9 +58,11 @@ export function PrimaryDashboard() {
       setStatus("Done");
       setWidget({ ...widget, scriptSnippet: buildScript() });
     } catch (e) {
-      console.debug("Error:", e);
+      console.error("Error:", e);
+      setStatus("Error");
     }
   }
+
   return (
     <main className="flex-1 flex flex-col overflow-hidden">
       <section className="flex-1 overflow-y-auto p-8 md:p-12">
@@ -84,7 +87,7 @@ export function PrimaryDashboard() {
                   embed in your code.
                 </p>
 
-                <div className="grid gap-4 md:grid-cols-[1fr_auto]">
+                <form onSubmit={doScraping} className="grid gap-4 md:grid-cols-[1fr_auto]">
                   <label className="relative block w-full">
                     <span className="text-sm font-semibold text-slate-700">
                       Website URL
@@ -100,13 +103,13 @@ export function PrimaryDashboard() {
                     />
                   </label>
                   <button
-                    onClick={doScraping}
-                    disabled={status != "idle"}
+                    type="submit"
+                    disabled={status != "idle" || !url.trim()}
                     className="inline-flex items-center self-end justify-center gap-2 rounded-3xl bg-amber-500 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 transition hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     Analyze
                   </button>
-                </div>
+                </form>
 
                 <div className="flex flex-col gap-6 rounded-3xl border border-slate-200 bg-slate-50 p-6">
                   <label className="block">
@@ -268,11 +271,10 @@ export function PrimaryDashboard() {
                   </div>
                   <button
                     onClick={copySnippet}
-                    className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-semibold shadow-sm border transition hover:cursor-pointer ${
-                      snippetCopy
+                    className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-semibold shadow-sm border transition hover:cursor-pointer ${snippetCopy
                         ? "bg-emerald-50 text-emerald-700 border-emerald-200"
                         : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
-                    }`}
+                      }`}
                   >
                     {snippetCopy ? (
                       <>
@@ -302,6 +304,15 @@ export function PrimaryDashboard() {
                     <span>Widget source</span>
                   </div>
                   <p className="mt-2 break-all">{newUrl}</p>
+                </div>
+
+                <div className="flex justify-end pt-4">
+                  <button
+                    onClick={() => { setStatus("idle"); setWidget(defaultWidgetConfig); }}
+                    className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
+                  >
+                    Start over
+                  </button>
                 </div>
               </div>
             </div>

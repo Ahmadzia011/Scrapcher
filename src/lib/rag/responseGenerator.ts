@@ -3,7 +3,7 @@ import chatModel from "@/src/lib/chat-model";
 import { retrieveData } from "./retriever";
 import { BRAIN_SYSTEM_PROMPT } from "@/src/constants/ai.constants";
 
-export async function getResponse(chatbotId: any, question: any) {
+export async function getResponse(chatbotId: any, question: any, history: any[] = []) {
   console.log("Recieved the request");
 
   console.log(chatbotId, question)
@@ -19,14 +19,19 @@ export async function getResponse(chatbotId: any, question: any) {
 
   const llm = chatModel();
 
+  const messages: any[] = [
+    ["system", BRAIN_SYSTEM_PROMPT],
+  ];
 
-  const prompt = ChatPromptTemplate.fromMessages([
-    [
-      "system",
-      BRAIN_SYSTEM_PROMPT,
-    ],
-    ["human", "{question}"],
-  ]);
+  if (history && Array.isArray(history)) {
+    history.forEach((msg) => {
+      messages.push([msg.role === "user" ? "human" : "ai", msg.content]);
+    });
+  }
+
+  messages.push(["human", "{question}"]);
+
+  const prompt = ChatPromptTemplate.fromMessages(messages);
 
 
   const formattedPrompt = await prompt.invoke({

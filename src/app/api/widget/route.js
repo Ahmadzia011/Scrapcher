@@ -255,6 +255,11 @@ export async function GET(request) {
     updateInputControlsState();
 
     try {
+      // Get the last 4 messages for context (excluding the current query which isn't in state.messages yet... wait, it WAS pushed)
+      // Actually, currentQueryText was already pushed to state.messages at line 248!
+      // So we want the messages before the last one.
+      const historyToSend = state.messages.slice(-6, -1);
+
       const response = await fetch("https://scrapcher.vercel.app/api/chat", {
         method: "POST",
         headers: {
@@ -262,6 +267,7 @@ export async function GET(request) {
         },
         body: JSON.stringify({
           query: currentQueryText,
+          history: historyToSend
         }),
       });
 
