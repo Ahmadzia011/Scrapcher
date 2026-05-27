@@ -67,11 +67,10 @@ export async function storeData(urlInput: any) {
   // --- STEP 2: Embed and store the scraped content in the database ---
   // This part is unchanged — the Embedder takes the markdown content
   // and stores it as vector embeddings in Supabase for AI retrieval.
-
   try {
-    await embedData(content, urlInput, chatbotId);
+    await embedData(content, origin, chatbotId);
     console.log("Embedded successfully.");
-    return chatbotId
+    return
   } catch (e: any) {
     return "error";
   }
@@ -88,7 +87,7 @@ export async function isUrlScraped(urlInput: string | URL) {
   const foundData = await supabase
     .from("documents")
     .select("metadata")
-    .eq("metadata->>sourceUrl", normalizedUrl)
+    .eq("metadata->>origin", normalizedUrl)
 
   return foundData.data?.length || 0;
 }

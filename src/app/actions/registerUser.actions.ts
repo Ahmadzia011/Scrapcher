@@ -2,6 +2,7 @@
 
 import SupaBase from "@/src/lib/supabase";
 import { redirect } from "next/navigation";
+import crypto from "crypto";
 
 export async function registerUser(formData: FormData) {
 
@@ -31,12 +32,14 @@ export async function registerUser(formData: FormData) {
       return { error: "A user with this email already exists." };
     }
 
+    const hashedPassword = crypto.createHash("sha256").update(password).digest("hex");
+
     // 3. Create the user in PostgreSQL
     // Note: In production, wrap 'password' in a hashing function like bcrypt!
     const { error: insertError } = await supabase.from("users").insert({
       name,
       email,
-      password,
+      password:hashedPassword,
     });
 
     if (insertError) {

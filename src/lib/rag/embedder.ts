@@ -5,9 +5,8 @@ import { embeddingModel } from "@/src/lib/chat-model";
 
 
 
-export async function embedData(dataset: any, url: any, chatbotId: string) {
+export async function embedData(dataset: any, origin: any, chatbotId: string) {
 
-  const origin = new URL(url).origin
   console.log("Embedder is called");
   const client = supabase();
   // It initializes the object Recursive text splitter
@@ -38,7 +37,7 @@ export async function embedData(dataset: any, url: any, chatbotId: string) {
 
 
       allText.push(...validDocs)
-      allMetaData.push(...validDocs.map(() => ({ sourceUrl: url, chatbotId: chatbotId, origin })));
+      allMetaData.push(...validDocs.map(() => ({ origin: origin, chatbotId: chatbotId})));
 
     }
     catch (e) {

@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import crypto from 'crypto'
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -16,10 +17,11 @@ export default function LoginPage() {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-
+    
+    const hashedPassword = crypto.createHash("sha256").update(password).digest("hex");
     const result = await signIn("credentials", {
       email,
-      password,
+      password:hashedPassword,
       redirect: false,
     });
 

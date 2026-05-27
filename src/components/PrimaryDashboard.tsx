@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { storeData } from "../app/actions/storeData.actions";
+import { storeData, isUrlScraped } from "../app/actions/storeData.actions";
 import {
   WidgetConfig,
   defaultWidgetConfig,
@@ -48,10 +48,10 @@ export function PrimaryDashboard() {
     }
 
     try {
-      // if ((await isUrlScraped(newUrl) > 0)){
-      //   setResultStatus('Site is already scrapped')
-      //   return
-      // }
+      if ((await isUrlScraped(newUrl) > 0)){
+        setStatus('Error')
+        return
+      }
       setStatus("Scraping");
       const scrapResult = await storeData(url); //using the old url because useState would update after completion of function
       if (scrapResult === "error") return setStatus("Error");

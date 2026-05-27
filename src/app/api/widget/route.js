@@ -4,48 +4,45 @@ const supabase = Supabase();
 
 
 export async function GET(request) {
-  const incomingReferer = request.headers.get('referer');
-  const incomingOrigin = request.headers.get('origin');
+  // const incomingReferer = request.headers.get('referer');
+  // const incomingOrigin = request.headers.get('origin');
 
-  // 1. Declare the variable in the global function scope
-  let clientDomain = '';
+  // let clientDomain = '';
 
-  if (incomingOrigin) {
-    clientDomain = incomingOrigin;
-  } else if (incomingReferer) {
-    // 2. Only wrap the URL parser in the try/catch block
-    try {
-      clientDomain = new URL(incomingReferer).origin;
-    } catch (e) {
-      return new Response(JSON.stringify({ error: "Invalid Referer header format." }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" }
-      });
-    }
-  } else {
-    return new Response(JSON.stringify({ error: "Access Denied: Missing mandatory browser routing identification." }), {
-      status: 403,
-      headers: { "Content-Type": "application/json" }
-    });
-  }
+  // if (incomingOrigin) {
+  //   clientDomain = incomingOrigin;
+  // }
+  //  else if (incomingReferer) {
+  //   try {
+  //     clientDomain = new URL(incomingReferer).origin;
+  //   } catch (e) {
+  //     return new Response(JSON.stringify({ error: "Invalid Referer header format." }), {
+  //       status: 400,
+  //       headers: { "Content-Type": "application/json" }
+  //     });
+  //   }
+  // } else {
+  //   return new Response(JSON.stringify({ error: "Access Denied: Missing mandatory browser routing identification." }), {
+  //     status: 403,
+  //     headers: { "Content-Type": "application/json" }
+  //   });
+  // }
 
-  // 3. Database Check: clientDomain is now safely accessible here
-  const { data, error } = await supabase
-    .from('documents')
-    .select('id')
-    .eq('metadata->>origin', clientDomain)
-    .limit(1);
+  // const { data, error } = await supabase
+  //   .from('documents')
+  //   .filter('metadata->>origin', 'eq', clientDomain)
+  //   .limit(1);
 
-  if (error || !data || data.length === 0) {
-    return new Response(JSON.stringify({ error: "Unauthorized domain configuration." }), {
-      status: 403,
-      headers: { 
-        "Content-Type": "application/json",
-        // Echo back CORS even on failure to avoid messy browser console warnings
-        "Access-Control-Allow-Origin": clientDomain 
-      }
-    });
-  }
+  // if (error || !data || data.length === 0) {
+  //   return new Response(JSON.stringify({ error: "Unauthorized domain configuration." }), {
+  //     status: 403,
+  //     headers: { 
+  //       "Content-Type": "application/json",
+  //       // Echo back CORS even on failure to avoid messy browser console warnings
+  //       "Access-Control-Allow-Origin": clientDomain 
+  //     }
+  //   });
+  // }
 
   // The complete widget script represented as a raw text string payload
   const widgetScript = `
@@ -260,7 +257,7 @@ export async function GET(request) {
       // So we want the messages before the last one.
       const historyToSend = state.messages.slice(-6, -1);
 
-      const response = await fetch("https://scrapcher.vercel.app/api/chat", {
+      const response = await fetch("http://localhost:3000/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

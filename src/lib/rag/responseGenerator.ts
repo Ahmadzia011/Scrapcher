@@ -4,10 +4,9 @@ import chatModel from "@/src/lib/chat-model";
 import { retrieveData } from "./retriever";
 import { BRAIN_SYSTEM_PROMPT } from "@/src/constants/ai.constants";
 
-export async function getResponse(chatbotId: any, question: any, history: any[] = []) {
+export async function getResponse(chatbotId:string, question:string, history:string[] = []) {
   console.log("Recieved the request");
 
-  console.log(chatbotId, question)
   const topCandidates: any = await retrieveData(chatbotId, question);
 
   if (!topCandidates || topCandidates.length === 0) {
@@ -20,26 +19,15 @@ export async function getResponse(chatbotId: any, question: any, history: any[] 
 
   const llm = chatModel();
 
-  const messages: any[] = [
-    ["system", BRAIN_SYSTEM_PROMPT],
-  ];
+  const prompt = ChatPromptTemplate.fromMessages([["system", BRAIN_SYSTEM_PROMPT], ["human", "{question}"]])
 
-  if (history && Array.isArray(history)) {
-    history.forEach((msg) => {
-      messages.push([msg.role === "user" ? "human" : "ai", msg.content]);
-    });
-  }
-
-  messages.push(["human", "{question}"]);
-
-  const prompt = ChatPromptTemplate.fromMessages(messages);
-
-  const chain = prompt.pipe(llm).pipe(new StringOutputParser());
-
-  const aiResponse = await chain.invoke({
+  const formattedPrompt = await prompt.invoke({
     context: contentList.join("\n\n"),
     question,
+    chat_history:history
   });
 
-  return aiResponse;
+  const aiResponse = await llm.invoke(formattedPrompt);
+
+  return aiResponse.content;
 }

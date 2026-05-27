@@ -1,6 +1,7 @@
 // Brain Component Constants
-export const BRAIN_SYSTEM_PROMPT = `
-    ### ROLE
+export const BRAIN_SYSTEM_PROMPT = 
+
+      `### ROLE
     You are a precise Knowledge Retrieval Engine. Deliver high-density, accurate responses using ONLY the provided data and with politness.
 
     ### STRICT OPERATIONAL CONSTRAINTS
@@ -20,6 +21,10 @@ export const BRAIN_SYSTEM_PROMPT = `
     <context>
     {context}
     </context>
+
+    <chat_history>
+    {chat_history}
+    </chat_history>
 
     ### FORMATTING & LANGUAGE
     - NON-ENGLISH SOURCE: If <context> is not English, translate the answer to English and append "(Original Language: [Name])".

@@ -4,7 +4,7 @@ import crypto from "crypto";
 
 // 1. Handle the browser's preflight OPTIONS request
 export async function OPTIONS(request: Request) {
-  const origin = request.headers.get("origin") || "*";
+  const origin:string = request.headers.get("origin")!;
   return new Response(null, {
     status: 204,
     headers: {
@@ -19,9 +19,9 @@ export async function OPTIONS(request: Request) {
 export async function POST(request: Request) {
   const originHeader = request.headers.get("origin");
   const refererHeader = request.headers.get("referer");
-  let origin = originHeader;
+  let origin = originHeader!;
 
-  if (!origin && refererHeader) {
+  if (!originHeader && refererHeader) {
     try {
       origin = new URL(refererHeader).origin;
     } catch (e) {
@@ -29,33 +29,40 @@ export async function POST(request: Request) {
     }
   }
 
-  if (!origin) {
-    return new Response(JSON.stringify({ error: "Origin or Referer header is required." }), {
-      status: 400,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-    });
-  }
+  // if (!origin && refererHeader) {
+  //   try {
+  //     origin = new URL(refererHeader).origin;
+  //   } catch (e) {
+  //     // Ignored
+  //   }
+  // }
 
-  // Enforce domain check against documents in Supabase
-  const supabase = Supabase();
-  const { data, error } = await supabase
-    .from("documents")
-    .select("id")
-    .eq("metadata->>origin", origin)
-    .limit(1);
+  // if (!origin) {
+  //   return new Response(JSON.stringify({ error: "Origin or Referer header is required." }), {
+  //     status: 400,
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       "Access-Control-Allow-Origin": "*",
+  //     },
+  //   });
+  // }
 
-  if (error || !data || data.length === 0) {
-    return new Response(JSON.stringify({ error: "Unauthorized domain configuration." }), {
-      status: 403,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": origin,
-      },
-    });
-  }
+  // // Enforce domain check against documents in Supabase
+  // const supabase = Supabase();
+  // const { data, error } = await supabase
+  //   .from("documents")
+  //   .filter('metadata->>origin', 'eq', origin)
+  //   .limit(1);
+
+  // if (error || !data || data.length === 0) {
+  //   return new Response(JSON.stringify({ error: "Unauthorized domain configuration." }), {
+  //     status: 403,
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       "Access-Control-Allow-Origin": origin,
+  //     },
+  //   });
+  // }
 
   try {
     const body = await request.json();
@@ -67,7 +74,7 @@ export async function POST(request: Request) {
         status: 400,
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": origin,
+          "Access-Control-Allow-Origin": "*",
         },
       });
     }
@@ -81,17 +88,18 @@ export async function POST(request: Request) {
       status: 200,
       headers: {
         "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Origin": "*",
       },
     });
   } catch (error) {
+    console.error("Chat API Error:", error);
     return new Response(
       JSON.stringify({ error: "Invalid JSON or server error" }),
-      { 
+      {
         status: 500,
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": origin,
+          "Access-Control-Allow-Origin": "*",
         }
       },
     );
