@@ -1,4 +1,5 @@
 import { ChatPromptTemplate } from "@langchain/core/prompts";
+import { StringOutputParser } from "@langchain/core/output_parsers";
 import chatModel from "@/src/lib/chat-model";
 import { retrieveData } from "./retriever";
 import { BRAIN_SYSTEM_PROMPT } from "@/src/constants/ai.constants";
@@ -14,7 +15,7 @@ export async function getResponse(chatbotId: any, question: any, history: any[] 
   }
 
   const contentList = topCandidates.map(
-    (candidate: { content: any }) => candidate.content,
+    (candidate: any) => candidate.pageContent,
   );
 
   const llm = chatModel();
@@ -33,14 +34,12 @@ export async function getResponse(chatbotId: any, question: any, history: any[] 
 
   const prompt = ChatPromptTemplate.fromMessages(messages);
 
+  const chain = prompt.pipe(llm).pipe(new StringOutputParser());
 
-  const formattedPrompt = await prompt.invoke({
+  const aiResponse = await chain.invoke({
     context: contentList.join("\n\n"),
     question,
   });
 
-  const aiResponse = await llm.invoke(formattedPrompt);
-
-
-  return aiResponse.content;
+  return aiResponse;
 }

@@ -11,6 +11,7 @@
   "dependencies": {
     "@huggingface/inference": "^4.13.15",
     "@langchain/classic": "^1.0.32",
+    "@langchain/cohere": "^1.0.5",
     "@langchain/community": "^1.1.28",
     "@langchain/core": "^1.1.46",
     "@langchain/google": "^0.1.11",

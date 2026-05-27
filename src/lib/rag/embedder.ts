@@ -24,6 +24,8 @@ export async function embedData(dataset: any, url: any, chatbotId: string) {
   const embeddingModelInstance = embeddingModel()
 
 
+  let allText: string[] = []
+  let allMetaData: Record<string, any>[] = []
 
   for (const data of dataset) {
 
@@ -34,21 +36,34 @@ export async function embedData(dataset: any, url: any, chatbotId: string) {
       const validDocs = docs.filter(doc => doc && doc.trim().length > 0);
       if (validDocs.length === 0) continue;
 
-      const vectorStore = await SupabaseVectorStore.fromTexts(
-        validDocs, // List of string (docs) to convert in vector and then store in vector db.
-        validDocs.map(() => ({ sourceUrl: url, chatbotId: chatbotId, origin })), // Maps each doc to a metadata object
-        embeddingModelInstance, //Model that will be used to convert strings to vector.
-        {
-          client,
-          tableName: "documents", // Table to work on
-          queryName: "match_documents", // Database function for semantic search logic.
-        },
-      );
+
+      allText.push(...validDocs)
+      allMetaData.push(...validDocs.map(() => ({ sourceUrl: url, chatbotId: chatbotId, origin })));
+
     }
     catch (e) {
-      console.error("Embedding error:", e);
-      throw new Error("Embedding failed.");
+      console.error("Failed parsing a document item text chunk:", e);
+      continue; 
     }
+  }
+
+  if(allText.length > 0){
+  try {
+    await SupabaseVectorStore.fromTexts(
+      allText,
+      allMetaData,
+      embeddingModelInstance, //Model that will be used to convert strings to vector.
+      {
+        client,
+        tableName: "documents", // Table to work on
+        queryName: "match_documents", // Database function for semantic search logic.
+      },
+    );
+  }
+  catch (e) {
+    console.error("Embedding error:", e);
+    throw new Error("Embedding failed.");
+  }
   }
 
   console.log("Embedding done");

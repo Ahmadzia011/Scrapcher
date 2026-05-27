@@ -1,21 +1,26 @@
+import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import supabase from "../supabase";
 import { embeddingModel } from "@/src/lib/chat-model";
 
 export async function retrieveData(chatbotId: any, question: any) {
-  
-  const embeddingModelInstance = embeddingModel()
-  const vectorQuery = await embeddingModelInstance.embedQuery(question);
+  const embeddingModelInstance = embeddingModel();
   const client = supabase();
-  const { data: topCandidates, error } = await client.rpc("match_documents", {
-    queryEmbedding: vectorQuery,
-    matchCount: 5,
-    filter: { chatbotId : chatbotId },
+
+  const vectorStore = new SupabaseVectorStore(embeddingModelInstance, {
+    client,
+    tableName: "documents",
+    queryName: "match_documents",
+    filter: { chatbotId: chatbotId },
   });
+
+  const retriever = vectorStore.asRetriever(5);
+
   
-  if (error) {
+  try {
+    const topCandidates = await retriever.invoke(question);
+    return topCandidates;
+  } catch (error) {
     console.error("Error retrieving documents:", error);
     return [];
   }
-
-  return topCandidates;
 }
