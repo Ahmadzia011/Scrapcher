@@ -17,6 +17,7 @@ export async function storeData(urlInput: any) {
   let origin: string;
 
   try {
+    console.log("Python scraper called..")
     const response = await fetch(`${process.env.PYTHON_SERVER}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -70,7 +71,7 @@ export async function storeData(urlInput: any) {
   try {
     await embedData(content, origin, chatbotId);
     console.log("Embedded successfully.");
-    return
+    return chatbotId
   } catch (e: any) {
     return "error";
   }
@@ -79,7 +80,8 @@ export async function storeData(urlInput: any) {
 export async function isUrlScraped(urlInput: string | URL) {
   const supabase = Supabase();
 
-  let normalizedUrl = urlInput;
+  let normalizedUrl:any = urlInput!;
+
   try {
     normalizedUrl = new URL(urlInput).origin;
   } catch (e) { }
@@ -89,5 +91,7 @@ export async function isUrlScraped(urlInput: string | URL) {
     .select("metadata")
     .eq("metadata->>origin", normalizedUrl)
 
-  return foundData.data?.length || 0;
+    const chatbot_id = await hashString(normalizedUrl)
+  // Return the origin if data exists, null otherwise
+  return foundData.data && foundData.data.length > 0 ? chatbot_id : null;
 }

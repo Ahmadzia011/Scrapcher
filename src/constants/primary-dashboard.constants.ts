@@ -1,5 +1,5 @@
 
-  export const scriptUrl = "https://scrapcher.vercel.app/api/widget";
+export const scriptUrl = "https://scrapcher.vercel.app/api/widget";
 
 export type Status = 'idle' | 'Scraping' | 'Done' | 'Error'
 

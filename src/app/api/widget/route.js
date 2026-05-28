@@ -1,48 +1,59 @@
 import Supabase from '@/src/lib/supabase';
+import crypto from 'crypto';
 
 const supabase = Supabase();
 
+// Helper: Compute chatbotId from origin (SHA256 hash)
+function computeChatbotId(origin) {
+  return crypto.createHash("sha256").update(origin).digest("hex");
+}
 
 export async function GET(request) {
-  // const incomingReferer = request.headers.get('referer');
-  // const incomingOrigin = request.headers.get('origin');
+  const incomingReferer = request.headers.get('referer');
+  const incomingOrigin = request.headers.get('origin');
 
-  // let clientDomain = '';
+  let clientDomain = '';
 
-  // if (incomingOrigin) {
-  //   clientDomain = incomingOrigin;
-  // }
-  //  else if (incomingReferer) {
-  //   try {
-  //     clientDomain = new URL(incomingReferer).origin;
-  //   } catch (e) {
-  //     return new Response(JSON.stringify({ error: "Invalid Referer header format." }), {
-  //       status: 400,
-  //       headers: { "Content-Type": "application/json" }
-  //     });
-  //   }
-  // } else {
-  //   return new Response(JSON.stringify({ error: "Access Denied: Missing mandatory browser routing identification." }), {
-  //     status: 403,
-  //     headers: { "Content-Type": "application/json" }
-  //   });
-  // }
+  // Step 1: Extract domain from headers
+  if (incomingOrigin) {
+    clientDomain = incomingOrigin;
+  }
+   else if (incomingReferer) {
+    try {
+      clientDomain = new URL(incomingReferer).origin;
+    } catch (e) {
+      return new Response(JSON.stringify({ error: "Invalid Referer header format." }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+  } else {
+    return new Response(JSON.stringify({ error: "Access Denied: Missing mandatory browser routing identification." }), {
+      status: 403,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
 
-  // const { data, error } = await supabase
-  //   .from('documents')
-  //   .filter('metadata->>origin', 'eq', clientDomain)
-  //   .limit(1);
+  // Step 2: Verify domain has registered documents
+  const { data, error } = await supabase
+    .from('documents')
+    .select('id')
+    .filter('metadata->>origin', 'eq', clientDomain)
+    .limit(1);
 
-  // if (error || !data || data.length === 0) {
-  //   return new Response(JSON.stringify({ error: "Unauthorized domain configuration." }), {
-  //     status: 403,
-  //     headers: { 
-  //       "Content-Type": "application/json",
-  //       // Echo back CORS even on failure to avoid messy browser console warnings
-  //       "Access-Control-Allow-Origin": clientDomain 
-  //     }
-  //   });
-  // }
+  if (error || !data || data.length === 0) {
+    return new Response(JSON.stringify({ error: "Unauthorized domain configuration." }), {
+      status: 403,
+      headers: { 
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": clientDomain 
+      }
+    });
+  }
+
+  // Step 3: Compute chatbotId for this domain
+  const computedChatbotId = computeChatbotId(clientDomain);
+  console.log(`[Widget] Domain: ${clientDomain}, ChatbotId: ${computedChatbotId}`);
 
   // The complete widget script represented as a raw text string payload
   const widgetScript = `
@@ -61,6 +72,9 @@ export async function GET(request) {
     console.error("Scrapcher Widget: Script tag not detected correctly.");
   }
 
+  // SECURITY: ChatbotId is injected by server (computed as hash of origin)
+  // This prevents clients from spoofing different chatbots, because now user can't use the script of other users to exploit his chabot.
+  const chatbotId = "${computedChatbotId}";
   const name = scriptTag?.dataset.name || "Assistant";
   const accent = scriptTag?.dataset.accent || "#f59e0b";
   const background = scriptTag?.dataset.background || "#f8fafc";
@@ -257,14 +271,15 @@ export async function GET(request) {
       // So we want the messages before the last one.
       const historyToSend = state.messages.slice(-6, -1);
 
-      const response = await fetch("http://localhost:3000/api/chat", {
+      const response = await fetch("https://scrapcher.vercel.app/api/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
+          body: JSON.stringify({
           query: currentQueryText,
-          history: historyToSend
+          history: historyToSend,
+          chatbotId:chatbotId
         }),
       });
 

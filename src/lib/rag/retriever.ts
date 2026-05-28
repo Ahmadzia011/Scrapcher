@@ -16,15 +16,13 @@ export async function retrieveData(chatbotId: any, question: any) {
 
     const baseRetriever = vectorStore.asRetriever({
     k: 20, 
-    searchKwargs: {
-      filter: { chatbotId: chatbotId },
-    } as any,
+    filter: { chatbotId: chatbotId },
   });
   
   const reranker = new CohereRerank(
     {
       model: "rerank-english-v3.0",
-      apiKey: process.env.COHERE_API_KEY  ,
+      apiKey: process.env.COHERE_API_KEY,
       topN: 5
     }
   )

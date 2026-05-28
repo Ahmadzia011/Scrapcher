@@ -17,7 +17,7 @@ export function PrimaryDashboard() {
   const [snippetCopy, setSnippetCopy] = useState<Boolean>(false);
   const [widget, setWidget] = useState<WidgetConfig>(defaultWidgetConfig);
 
-  function buildScript() {
+  function buildScript(chatbot_id:string) {
     return `
     <script 
       src="${scriptUrl}" 
@@ -27,7 +27,7 @@ export function PrimaryDashboard() {
       data-panel="${widget.panelColor}"
       data-text="${widget.textColor}"
       async>
-       </script>`;
+    </script>`;
   }
 
   async function copySnippet() {
@@ -48,15 +48,24 @@ export function PrimaryDashboard() {
     }
 
     try {
-      if ((await isUrlScraped(newUrl) > 0)){
-        setStatus('Error')
-        return
+      // Check if URL is already scraped
+      const existingOrigin = await isUrlScraped(url);
+      if (existingOrigin) {
+        // URL already scraped - show success with script tag
+        setStatus("Done");
+        setWidget({ ...widget, scriptSnippet: buildScript(existingOrigin) });
+        return;
       }
+      
       setStatus("Scraping");
       const scrapResult = await storeData(url); //using the old url because useState would update after completion of function
-      if (scrapResult === "error") return setStatus("Error");
+      if (scrapResult === "error"){
+         setStatus("Error")
+          return
+        };
+
       setStatus("Done");
-      setWidget({ ...widget, scriptSnippet: buildScript() });
+      setWidget({ ...widget, scriptSnippet: buildScript(scrapResult) });
     } catch (e) {
       console.error("Error:", e);
       setStatus("Error");
