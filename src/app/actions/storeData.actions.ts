@@ -84,7 +84,9 @@ export async function isUrlScraped(urlInput: string | URL) {
 
   try {
     normalizedUrl = new URL(urlInput).origin;
-  } catch (e) { }
+  } catch (e) { 
+    console.error("Error while getting origin.")
+  }
 
   const foundData = await supabase
     .from("documents")
