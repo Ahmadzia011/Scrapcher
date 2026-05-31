@@ -1,6 +1,6 @@
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
-import supabase from "../supabase";
+import supabase from "../lib/supabase";
 import { embeddingModel } from "@/src/lib/chat-model";
 
 
@@ -11,7 +11,7 @@ export async function embedData(dataset: any, origin: any, chatbotId: string) {
   const client = supabase();
   // It initializes the object Recursive text splitter
   const textSplitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 500,
+    chunkSize: 300,
     chunkOverlap: 50,
   });
 

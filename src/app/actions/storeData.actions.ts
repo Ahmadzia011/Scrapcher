@@ -2,7 +2,7 @@
 
 import crypto from 'crypto';
 import scrapper from '../../lib/rag/scraper';
-import { embedData } from '@/src/lib/rag/embedder';
+import { embedData } from '@/src/constants/embedder';
 import Supabase from '@/src/lib/supabase';
 
 
