@@ -3,10 +3,12 @@
 import { registerUser } from "../actions/registerUser.actions";
 import { useState } from "react";
 import Link from "next/link";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function RegisterPage() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   async function handleSubmit(formData: FormData) {
     setIsLoading(true);
@@ -21,12 +23,10 @@ export default function RegisterPage() {
   }
 
   return (
-    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-(--primary-color) px-5 py-10 bg-linear-to-b from-(--primary-color) from-0% via-[#DAE3ED] via-74% to-[#B7CAE0] to-100%">
-      {/* Sky blue gradient */}
-      <div className="pointer-events-none absolute -top-40 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full " />
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-(--primary-color) px-5 py-10">
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full bg-[#78AEFF]/20 blur-3xl" />
 
       <div className="relative w-full max-w-sm">
-        {/* Header */}
         <div className="mb-10 text-center">
           <p className="mb-3 text-sm text-(--tertiary-color)">
             [ GET STARTED ]
@@ -49,7 +49,6 @@ export default function RegisterPage() {
           )}
 
           <div className="space-y-5">
-            {/* Name */}
             <div>
               <label
                 htmlFor="name"
@@ -68,7 +67,6 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Email */}
             <div>
               <label
                 htmlFor="email"
@@ -87,7 +85,6 @@ export default function RegisterPage() {
               />
             </div>
 
-            {/* Password */}
             <div>
               <label
                 htmlFor="password"
@@ -96,18 +93,32 @@ export default function RegisterPage() {
                 Password
               </label>
 
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                minLength={6}
-                placeholder="••••••••"
-                className="h-12 w-full rounded-xl border border-(--border-color) bg-white px-4 text-sm text-(--secondary-color) outline-none transition placeholder:text-(--tertiary-color) focus:border-(--secondary-color)"
-              />
+              <div className="relative">
+                <input
+                  id="password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  required
+                  minLength={6}
+                  placeholder="••••••••"
+                  className="h-12 w-full rounded-xl border border-(--border-color) bg-white px-4 pr-12 text-sm text-(--secondary-color) outline-none transition placeholder:text-(--tertiary-color) focus:border-(--secondary-color)"
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-(--tertiary-color) transition hover:text-(--secondary-color)"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-4 w-4" />
+                  ) : (
+                    <Eye className="h-4 w-4" />
+                  )}
+                </button>
+              </div>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={isLoading}
@@ -117,7 +128,6 @@ export default function RegisterPage() {
             </button>
           </div>
 
-          {/* Login */}
           <p className="mt-8 text-center text-sm text-(--tertiary-color)">
             Already have an account?{" "}
             <Link
