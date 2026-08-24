@@ -9,7 +9,7 @@ import { signOut, signIn } from "next-auth/react";
 
 interface NavbarProps {
   userName?: string;
-  userEmail: string;
+  userEmail?: string;
 }
 
 export default function Navbar({ userName, userEmail }: NavbarProps) {
