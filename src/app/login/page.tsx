@@ -4,24 +4,29 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import crypto from 'crypto'
+import crypto from "crypto";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setIsLoading(true);
-    
-    const hashedPassword = crypto.createHash("sha256").update(password).digest("hex");
+
+    const hashedPassword = crypto
+      .createHash("sha256")
+      .update(password)
+      .digest("hex");
+
     const result = await signIn("credentials", {
       email,
-      password:hashedPassword,
+      password: hashedPassword,
       redirect: false,
     });
 
@@ -35,68 +40,96 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-white px-4 py-8">
-      <div className="w-full max-w-sm">
+    <main className="relative flex min-h-screen items-center justify-center overflow-hidden  px-5 py-10 bg-linear-to-b from-(--primary-color) from-0% via-[#DAE3ED] via-74% to-[#B7CAE0] to-100%">
+      {/* Sky blue gradient */}
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-80 w-80 -translate-x-1/2 rounded-full " />
+
+      <div className="relative w-full max-w-sm">
+        {/* Header */}
         <div className="mb-10 text-center">
-          <h1 className="text-5xl md:text-6xl font-black font-serif italic text-slate-900 mb-4 tracking-tighter fade-in">
-            Welcome <span className="text-amber-500">back</span>.
+          <p className="mb-3 text-sm text-(--tertiary-color)">
+            [ WELCOME BACK ]
+          </p>
+
+          <h1 className="text-4xl font-semibold leading-[1.1] tracking-tighter text-(--secondary-color) md:text-5xl">
+            Welcome back.
           </h1>
-          <p className="text-slate-400 font-serif font-medium text-lg">
-            Please enter your details to sign in
+
+          <p className="mt-4 text-sm leading-relaxed text-(--tertiary-color) md:text-base">
+            Please enter your details to sign in.
           </p>
         </div>
 
         <form onSubmit={handleSubmit}>
           {error && (
-            <div className="mb-6 p-3 bg-red-50 text-red-600 text-sm rounded-lg flex items-start gap-2">
-              <span className="mt-1 w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
+            <div className="mb-5 border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
               {error}
             </div>
           )}
 
           <div className="space-y-5">
+            {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label
+                htmlFor="email"
+                className="mb-2 block text-sm font-medium text-(--secondary-color)"
+              >
                 Email
               </label>
+
               <input
+                id="email"
                 type="email"
                 placeholder="name@company.com"
-                className="w-full bg-transparent border border-slate-200 focus:border-amber-500 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none transition-all ring-0 focus:ring-4 focus:ring-amber-500/10"
+                value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                className="h-12 w-full rounded-xl border border-(--border-color) bg-white px-4 text-sm text-(--secondary-color) outline-none transition placeholder:text-(--tertiary-color) focus:border-(--secondary-color)"
               />
             </div>
 
+            {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+              <label
+                htmlFor="password"
+                className="mb-2 block text-sm font-medium text-(--secondary-color)"
+              >
                 Password
               </label>
+
               <input
+                id="password"
                 type="password"
                 placeholder="••••••••"
-                className="w-full bg-transparent border border-slate-200 focus:border-amber-500 rounded-lg px-4 py-2.5 text-slate-900 placeholder:text-slate-400 outline-none transition-all ring-0 focus:ring-4 focus:ring-amber-500/10"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                className="h-12 w-full rounded-xl border border-(--border-color) bg-white px-4 text-sm text-(--secondary-color) outline-none transition placeholder:text-(--tertiary-color) focus:border-(--secondary-color)"
               />
             </div>
 
+            {/* Submit */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full h-11 bg-amber-500 hover:bg-amber-600 cursor-pointer text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center mt-2"
+              className="h-12 w-full rounded-xl bg-(--secondary-color) text-sm font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? "Signing In..." : "Sign In"}
             </button>
           </div>
 
-          <div className="mt-8 text-center">
-            <Link href="/register" className="text-sm text-slate-500 hover:text-slate-900 transition-colors">
-              Don't have an account? <span className="text-amber-600 font-medium hover:underline underline-offset-4">Sign up</span>
+          {/* Register */}
+          <p className="mt-8 text-center text-sm text-(--tertiary-color)">
+            Don't have an account?{" "}
+            <Link
+              href="/register"
+              className="font-medium text-(--secondary-color) underline underline-offset-4 transition-opacity hover:opacity-60"
+            >
+              Sign up
             </Link>
-          </div>
+          </p>
         </form>
       </div>
-    </div>
+    </main>
   );
 }
