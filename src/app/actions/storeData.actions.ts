@@ -2,7 +2,7 @@
 
 import crypto from 'crypto';
 import scrapper from '../../lib/rag/scraper';
-import { embedData } from '@/src/constants/embedder';
+import { embedData } from '@/src/lib/rag/embedder';
 import Supabase from '@/src/lib/supabase';
 
 
@@ -11,7 +11,7 @@ export async function hashString(url: string) {
   return crypto.createHash('sha256').update(url).digest('hex');
 }
 
-export async function storeData(urlInput: any) {
+export async function storeData(urlInput: string) {
 
   let content: string[];
   let origin: string;
@@ -64,10 +64,7 @@ export async function storeData(urlInput: any) {
 	
 
   const chatbotId = await hashString(origin)
-
-  // --- STEP 2: Embed and store the scraped content in the database ---
-  // This part is unchanged — the Embedder takes the markdown content
-  // and stores it as vector embeddings in Supabase for AI retrieval.
+ 
   try {
     await embedData(content, origin, chatbotId);
     console.log("Embedded successfully.");

@@ -1,6 +1,6 @@
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
-import supabase from "../lib/supabase";
+import supabase from "../supabase";
 import { embeddingModel } from "@/src/lib/chat-model";
 
 
@@ -22,6 +22,7 @@ export async function embedData(dataset: any, origin: any, chatbotId: string) {
 
   const embeddingModelInstance = embeddingModel()
 
+  console.log('model loaded successfully')
 
   let allText: string[] = []
   let allMetaData: Record<string, any>[] = []

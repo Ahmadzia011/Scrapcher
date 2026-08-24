@@ -1,144 +1,316 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Check, Copy, ArrowRight, Sparkles } from "lucide-react";
+
+import MainButton from "@/src/components/ui/Button";
 import { storeData, isUrlScraped } from "../app/actions/storeData.actions";
 import {
   WidgetConfig,
   defaultWidgetConfig,
   scriptUrl,
-  Status
-} from '../constants/primary-dashboard.constants'
-import { Check } from "lucide-react";
+  Status,
+  accentPresets,
+} from "../constants/primary-dashboard.constants";
+
 
 export function PrimaryDashboard() {
-  const [status, setStatus] = useState<Status>("idle");
-  const [url, setUrl] = useState<string>("");
-  const [newUrl, setNewUrl] = useState<string>("");
-  const [snippetCopy, setSnippetCopy] = useState<Boolean>(false);
-  const [widget, setWidget] = useState<WidgetConfig>(defaultWidgetConfig);
+  const router = useRouter();
 
-  function buildScript(chatbot_id:string) {
+  const [status, setStatus] = useState<Status>("idle");
+  const [url, setUrl] = useState("");
+  const [newUrl, setNewUrl] = useState("");
+  const [snippetCopy, setSnippetCopy] = useState(false);
+  const [widget, setWidget] =
+    useState<WidgetConfig>(defaultWidgetConfig);
+
+
+  function buildScript(chatbot_id: string) {
     return `
-    <script 
-      src="${scriptUrl}" 
-      data-name="${widget.name}"
-      data-accent="${widget.accentColor}"
-      data-background="${widget.backgroundColor}"
-      data-panel="${widget.panelColor}"
-      data-text="${widget.textColor}"
-      async>
-    </script>`;
+      <script 
+        src="${scriptUrl}" 
+        data-name="${widget.name}"
+        data-accent="${widget.accentColor}"
+        data-background="${widget.backgroundColor}"
+        data-panel="${widget.panelColor}"
+        data-text="${widget.textColor}"
+        async>
+      </script>`;
   }
 
   async function copySnippet() {
     await navigator.clipboard.writeText(widget.scriptSnippet);
+
     setSnippetCopy(true);
-    setTimeout(() => setSnippetCopy(false), 2000);
+
+    setTimeout(() => {
+      setSnippetCopy(false);
+    }, 2000);
   }
+
   async function doScraping(e?: React.FormEvent) {
     if (e) e.preventDefault();
+
     if (!url.trim()) return;
+
     setNewUrl(url);
     setUrl("");
+
     try {
       new URL(url);
     } catch {
       setStatus("Error");
       return;
     }
-
+      setStatus("Scraping");
     try {
-      // Check if URL is already scraped
       const existingOrigin = await isUrlScraped(url);
+
       if (existingOrigin) {
-        // URL already scraped - show success with script tag
         setStatus("Done");
-        setWidget({ ...widget, scriptSnippet: buildScript(existingOrigin) });
+
+        setWidget({
+          ...widget,
+          scriptSnippet: buildScript(existingOrigin),
+        });
+
         return;
       }
-      
-      setStatus("Scraping");
-      const scrapResult = await storeData(url); //using the old url because useState would update after completion of function
-      if (scrapResult === "error"){
-         setStatus("Error")
-          return
-        };
+
+
+      const scrapResult = await storeData(url);
+
+      if (scrapResult === "error") {
+        setStatus("Error");
+        return;
+      }
 
       setStatus("Done");
-      setWidget({ ...widget, scriptSnippet: buildScript(scrapResult) });
-    } catch (e) {
-      console.error("Error:", e);
+
+      setWidget({
+        ...widget,
+        scriptSnippet: buildScript(scrapResult),
+      });
+    } catch (error) {
+      console.error("Error:", error);
       setStatus("Error");
     }
   }
 
-  return (
-    <main className="flex-1 flex flex-col overflow-hidden">
-      <section className="flex-1 overflow-y-auto p-8 md:p-12">
-        <div className="max-w-5xl mx-auto space-y-10">
-          {status == "idle" ? (
-            <div className="rounded-[2rem] border border-slate-200 bg-white p-10 shadow-lg shadow-slate-200/50">
-              <div className="flex flex-col gap-4">
-                <div className="flex items-center gap-3 text-slate-900">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.24em] text-amber-500">
-                      Primary user dashboard
-                    </p>
-                    <h1 className="text-3xl font-bold text-slate-900">
-                      Generate a hosted chatbot widget for your website
-                    </h1>
-                  </div>
-                </div>
+  function startOver() {
+    router.push('/dashbaord')
+      // setStatus("idle");
+      // setUrl("");
+      // setNewUrl("");
+      // setSnippetCopy(false);
+      // setWidget(defaultWidgetConfig);
+  }
 
-                <p className="text-slate-600 leading-relaxed">
-                  Paste any website URL and we will scrape its pages, embed the
-                  content in Supabase, and give you a CDN-hosted widget link to
-                  embed in your code.
+  const isCustomColor = !accentPresets.some(
+    (preset) => preset.value.toLowerCase() === widget.accentColor.toLowerCase()
+  );
+
+  return (
+    <main className="min-h-screen w-full flex justify-center items-center text-(--secondary-color) pt-20  bg-linear-to-b from-(--primary-color) from-0% via-[#DAE3ED] via-74% to-[#B7CAE0] to-100%">
+
+        {/* =====================================================
+            PAGE HEADER
+        ===================================================== */}
+
+      <div className="w-full max-w-[1430PX] drop-shadow-xl">
+        <div className="">
+          <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-center">
+
+            {status === "Done" && (
+              <button
+                type="button"
+                onClick={() => router.push("/dashboard/chatbot-demo")}
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-(--secondary-color) px-5 text-xs font-medium text-white transition hover:opacity-85"
+              >
+                <Sparkles className="h-3.5 w-3.5" />
+                Try demo
+                <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* =====================================================
+            WORKSPACE
+        ===================================================== */}
+
+        <div>
+          {status === "idle" && (
+            <div className="grid overflow-hidden rounded-md border border-(--border-color) bg-white md:grid-cols-[1.25fr_0.75fr]">
+
+              {/* =================================================
+                  LEFT — CONFIGURATION
+              ================================================= */}
+
+              <div className="border-b border-(--border-color) p-5 sm:p-7 md:border-b-0 md:border-r">
+
+              <p className="text-[11px] text-(--tertiary-color)">
+                [ SETUP ]
+              </p>
+
+                <h2 className="mt-3 text-2xl font-medium tracking-tight text-(--secondary-color) md:text-3xl">
+                  Connect your website
+                </h2>
+
+                <p className="mb-7 mt-3 max-w-xl text-xs leading-relaxed text-(--tertiary-color)">
+                  Enter the website you want Scrapcher to learn from. We'll
+                  crawl its pages and prepare them for your chatbot.
                 </p>
 
-                <form onSubmit={doScraping} className="grid gap-4 md:grid-cols-[1fr_auto]">
-                  <label className="relative block w-full">
-                    <span className="text-sm font-semibold text-slate-700">
+                {/* URL */}
+
+                <form onSubmit={doScraping}>
+                  <div className="mb-6">
+
+                    <label className="mb-2 block text-xs font-medium text-(--secondary-color)">
                       Website URL
-                    </span>
-                    <input
-                      value={url}
-                      onChange={(e) => {
-                        setUrl(e.target.value);
-                        console.log(e.target.value);
-                      }}
-                      placeholder="https://example.com"
-                      className="mt-2 w-full rounded-3xl border border-slate-200 bg-slate-50 px-5 py-4 text-base text-slate-900 outline-none transition focus:border-amber-500 focus:bg-white"
-                    />
-                  </label>
-                  <button
-                    type="submit"
-                    disabled={status != "idle" || !url.trim()}
-                    className="inline-flex items-center self-end justify-center gap-2 rounded-3xl bg-amber-500 px-6 py-4 text-sm font-semibold text-white shadow-lg shadow-amber-500/20 transition hover:bg-amber-600 disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    Analyze
-                  </button>
+                    </label>
+
+                    <div className="flex flex-col gap-3 sm:flex-row">
+
+                      <input
+                        id="website"
+                        type="url"
+                        value={url}
+                        onChange={(e) => setUrl(e.target.value)}
+                        placeholder="https://example.com"
+                        className="h-12 w-full rounded border border-(--border-color) bg-(--primary-color) px-5 text-sm text-(--secondary-color) outline-none transition duration-200 placeholder:text-[#A5ADB8] focus:border-(--tertiary-color)/40"
+                      />
+
+                      <button
+                        type="submit"
+                        disabled={!url.trim()}
+                        className="shrink-0"
+                      >
+                        <MainButton
+                          content="Analyze"
+                          isDark={true}
+                        />
+                      </button>
+
+                    </div>
+                  </div>
                 </form>
 
-                <div className="flex flex-col gap-6 rounded-3xl border border-slate-200 bg-slate-50 p-6">
-                  <label className="block">
-                    <span className="text-sm font-semibold text-slate-700">
-                      Widget name
-                    </span>
+                {/* =================================================
+                    CONFIGURATION
+                ================================================= */}
+
+                <div className="rounded-[8px] border border-(--border-color) bg-(--primary-color) p-[22px]">
+
+                  <div className="mb-[17px] text-sm font-medium text-(--secondary-color)">
+                    Customize your assistant
+                  </div>
+
+                  {/* NAME */}
+
+                  <div className="mb-[17px]">
+
+                    <label
+                      htmlFor="widget-name"
+                      className="mb-2 block text-xs text-(--secondary-color)"
+                    >
+                      Assistant name
+                    </label>
+
                     <input
+                      id="widget-name"
                       value={widget.name}
                       onChange={(e) =>
-                        setWidget({ ...widget, name: e.target.value })
+                        setWidget({
+                          ...widget,
+                          name: e.target.value,
+                        })
                       }
-                      placeholder="Scrapcher Assistant"
-                      className="mt-2 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-amber-500"
+                      placeholder="Assistant"
+                      className="h-[42px] w-full rounded-[6px] border border-[#DFE5EC] bg-white px-[13px] text-[11px] text-(--secondary-color) outline-none transition duration-200 placeholder:text-[#A5ADB8] focus:border-(--secondary-color) focus:ring-[3px] focus:ring-(--secondary-color)/[0.08]"
                     />
-                  </label>
 
-                  <div className="flex items-center justify-around pt-2">
-                    <label className="flex flex-col items-center gap-2 cursor-pointer group">
-                      <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-slate-200 ring-2 ring-transparent transition group-hover:ring-amber-200 shadow-sm">
+                  </div>
+
+                  {/* COLOR */}
+
+                  <div>
+
+                    <span className="mb-2 block text-xs text-(--secondary-color)">
+                      Accent color
+                    </span>
+
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-4">
+
+                      {accentPresets.map((color) => {
+                        const selected =
+                          widget.accentColor === color.value;
+
+                        return (
+                          <button
+                            key={color.value}
+                            type="button"
+                            onClick={() =>
+                              setWidget({
+                                ...widget,
+                                accentColor: color.value,
+                              })
+                            }
+                            className={`flex min-h-[48px] cursor-pointer items-center gap-2 rounded-[6px] border bg-white p-[10px] text-left transition duration-200 ${
+                              selected
+                                ? "border-(--secondary-color)"
+                                : "border-[#E4E8ED]"
+                            }`}
+                          >
+                            <span
+                              className="h-[22px] w-[22px] shrink-0 rounded-full border border-black/10"
+                              style={{
+                                backgroundColor: color.value,
+                              }}
+                            />
+
+                            <span className="flex min-w-0 flex-col gap-[2px]">
+                              <span className="text-[9px] font-semibold text-(--secondary-color)">
+                                {color.name}
+                              </span>
+
+                              <span className="text-[8px] text-[#9AA2AD]">
+                                {color.value}
+                              </span>
+                            </span>
+                          </button>
+                          
+                        );
+                      })}
+                      
+                      <label
+                        className={`flex min-h-[48px] cursor-pointer items-center gap-2 rounded-[6px] border bg-white p-[10px] text-left transition duration-200 ${
+                          isCustomColor
+                            ? "border-(--secondary-color)"
+                            : "border-[#E4E8ED]"
+                        }`}
+                      >
+                        <span
+                          className="h-[22px] w-[22px] shrink-0 rounded-full border border-black/10"
+                          style={{
+                            backgroundColor: widget.accentColor,
+                          }}
+                        />
+
+                        <span className="flex min-w-0 flex-col gap-[2px]">
+                          <span className="text-[9px] font-semibold text-(--secondary-color)">
+                            Custom
+                          </span>
+
+                          <span className="text-[8px] text-[#9AA2AD]">
+                            {widget.accentColor}
+                          </span>
+                        </span>
+
                         <input
+                          type="color"
                           value={widget.accentColor}
                           onChange={(e) =>
                             setWidget({
@@ -146,188 +318,358 @@ export function PrimaryDashboard() {
                               accentColor: e.target.value,
                             })
                           }
-                          type="color"
-                          className="h-14 w-14 -translate-x-2 -translate-y-2 cursor-pointer bg-transparent"
+                          className="sr-only"
                         />
-                      </div>
-                      <span className="text-xs font-semibold text-slate-600">
-                        Accent
-                      </span>
-                    </label>
+                      </label>
+                                              
+                    </div>
+                  </div>
+                </div>
 
-                    <label className="flex flex-col items-center gap-2 cursor-pointer group">
-                      <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-slate-200 ring-2 ring-transparent transition group-hover:ring-amber-200 shadow-sm">
-                        <input
-                          value={widget.backgroundColor}
-                          onChange={(e) =>
-                            setWidget({
-                              ...widget,
-                              backgroundColor: e.target.value,
-                            })
-                          }
-                          type="color"
-                          className="h-14 w-14 -translate-x-2 -translate-y-2 cursor-pointer bg-transparent"
-                        />
-                      </div>
-                      <span className="text-xs font-semibold text-slate-600">
-                        Background
-                      </span>
-                    </label>
+                {/* STATUS */}
 
-                    <label className="flex flex-col items-center gap-2 cursor-pointer group">
-                      <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-slate-200 ring-2 ring-transparent transition group-hover:ring-amber-200 shadow-sm">
-                        <input
-                          value={widget.panelColor}
-                          onChange={(e) =>
-                            setWidget({ ...widget, panelColor: e.target.value })
-                          }
-                          type="color"
-                          className="h-14 w-14 -translate-x-2 -translate-y-2 cursor-pointer bg-transparent"
-                        />
-                      </div>
-                      <span className="text-xs font-semibold text-slate-600">
-                        Panel
-                      </span>
-                    </label>
+                <div className="mt-[22px] flex items-center gap-[9px] rounded-[6px] border border-(--border-color) bg-white px-[13px] py-3">
 
-                    <label className="flex flex-col items-center gap-2 cursor-pointer group">
-                      <div className="h-10 w-10 shrink-0 overflow-hidden rounded-full border border-slate-200 ring-2 ring-transparent transition group-hover:ring-amber-200 shadow-sm">
-                        <input
-                          value={widget.textColor}
-                          onChange={(e) =>
-                            setWidget({ ...widget, textColor: e.target.value })
-                          }
-                          type="color"
-                          className="h-14 w-14 -translate-x-2 -translate-y-2 cursor-pointer bg-transparent"
-                        />
-                      </div>
-                      <span className="text-xs font-semibold text-slate-600">
-                        Text
-                      </span>
-                    </label>
+                  <span className="h-[7px] w-[7px] rounded-full bg-[#CBD5E1]" />
+
+                  <div className="flex flex-col gap-[2px]">
+
+                    <span className="text-xs font-medium text-(--secondary-color)">
+                      Waiting for a website
+                    </span>
+
+                    <span className="text-[9px] text-[#8A929D]">
+                      Enter a URL above to start building.
+                    </span>
+
                   </div>
                 </div>
               </div>
-            </div>
-          ) : status == "Scraping" ? (
-            <div className="rounded-[2rem] border border-emerald-200 bg-emerald-50 p-8 shadow-lg shadow-emerald-200/50">
-              <div className="flex items-center gap-3 px-2 py-4 text-sm text-emerald-700">
-                <svg
-                  className="h-5 w-5 animate-spin text-emerald-500"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-                  ></path>
-                </svg>
-                <span>Scraping in progress…</span>
-              </div>
-            </div>
-          ) : status == "Error" ? (
-            <div className="rounded-[2rem] border border-red-200 bg-red-50 p-8 shadow-lg shadow-red-200/50">
-              <div className="flex flex-col items-center gap-4 py-4 text-center">
-                <svg
-                  className="h-10 w-10 text-red-400"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"
-                  />
-                </svg>
-                <p className="text-sm font-semibold text-red-700">
-                  Something went wrong
-                </p>
-                <p className="text-xs text-red-500">
-                  Please check the URL and try again.
-                </p>
-                <button
-                  onClick={() => setStatus("idle")}
-                  className="mt-2 inline-flex items-center gap-2 rounded-2xl bg-red-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-red-600"
-                >
-                  Try again
-                </button>
-              </div>
-            </div>
-          ) : (
-            <div className="rounded-[2rem] border border-slate-200 bg-slate-50 p-8 shadow-sm">
-              <div className="flex flex-col gap-3">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.24em] text-slate-500">
-                      Widget link
-                    </p>
-                    <p className="text-xs text-slate-400">
-                      Copy this URL or use the embed snippet below.
-                    </p>
-                  </div>
-                  <button
-                    onClick={copySnippet}
-                    className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2 text-sm font-semibold shadow-sm border transition hover:cursor-pointer ${snippetCopy
-                        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                        : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
-                      }`}
-                  >
-                    {snippetCopy ? (
-                      <>
-                        <Check className="w-4 h-4" />
-                        Copied!
-                      </>
-                    ) : (
-                      "Copy"
-                    )}
-                  </button>
-                </div>
 
-                <div className="rounded-3xl border border-slate-200 bg-white p-6">
-                  <p className="text-sm font-semibold text-slate-700">
-                    Embed snippet
+              {/* =================================================
+                  RIGHT — LIVE PREVIEW
+              ================================================= */}
+
+              <LivePreview widget={widget} />
+
+            </div>
+          )}
+
+          {/* =====================================================
+              SCRAPING STATE
+          ===================================================== */}
+
+          {status === "Scraping" && (
+            <div className="grid overflow-hidden rounded-md border border-(--border-color) bg-white md:grid-cols-[1.25fr_0.75fr]">
+
+              <div className="flex min-h-125 items-center justify-center border-b border-(--border-color) p-8 md:border-b-0 md:border-r">
+
+                <div className="text-center">
+
+                  <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full border border-(--border-color)">
+                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-(--border-color) border-t-(--secondary-color)" />
+                  </div>
+
+                  <p className="mt-5 text-lg font-medium tracking-tight">
+                    Building your chatbot
                   </p>
-                  <pre className="mt-3 overflow-x-auto rounded-3xl bg-slate-900 p-4 text-sm text-emerald-200">
-                    <code>
-                      {widget.scriptSnippet ??
-                        "Your script tag will appear here once scraping completes."}
-                    </code>
-                  </pre>
-                </div>
 
-                <div className="rounded-3xl border border-slate-200 bg-white p-5 text-sm text-slate-600">
-                  <div className="flex items-center gap-2 text-slate-900 font-semibold">
-                    <span>Widget source</span>
-                  </div>
-                  <p className="mt-2 break-all">{newUrl}</p>
-                </div>
+                  <p className="mx-auto mt-2 max-w-sm text-xs leading-relaxed text-(--tertiary-color)">
+                    We are crawling your website and preparing its
+                    knowledge base.
+                  </p>
 
-                <div className="flex justify-end pt-4">
-                  <button
-                    onClick={() => { setStatus("idle"); setWidget(defaultWidgetConfig); }}
-                    className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-slate-800"
-                  >
-                    Start over
-                  </button>
                 </div>
+              </div>
+
+              <LivePreview widget={widget} />
+            </div>
+          )}
+
+          {/* =====================================================
+              ERROR
+          ===================================================== */}
+
+          {status === "Error" && (
+            <div className="rounded-md border border-(--border-color) bg-white p-10 md:p-16">
+
+              <div className="mx-auto max-w-md text-center">
+
+                <p className="text-xs text-(--tertiary-color)">
+                  [ error ]
+                </p>
+
+                <h2 className="mt-4 text-3xl font-semibold tracking-tighter">
+                  Something went wrong.
+                </h2>
+
+                <p className="mt-3 text-sm leading-relaxed text-(--tertiary-color)">
+                  We couldn't process that website. Check the URL and
+                  try again.
+                </p>
+
+                <button
+                  type="button"
+                  onClick={() => setStatus("idle")}
+                  className="mt-7"
+                >
+                  <MainButton
+                    content="Try again"
+                    isDark={true}
+                  />
+                </button>
+
               </div>
             </div>
           )}
+
+          {/* =====================================================
+              COMPLETE
+          ===================================================== */}
+
+          {status === "Done" && (
+            <div className="grid overflow-hidden rounded-md border border-(--border-color) bg-white md:grid-cols-[1.25fr_0.75fr]">
+
+              {/* LEFT */}
+
+              <div className="p-5 sm:p-7">
+
+                <div className="flex items-center gap-2">
+
+                  <span className="grid h-[18px] w-[18px] place-items-center rounded-full bg-[#22A35A] text-white">
+                    <Check size={10} />
+                  </span>
+
+                  <span className="text-[10px] font-semibold text-(--secondary-color)">
+                    Your chatbot is ready
+                  </span>
+
+                </div>
+
+                <h2 className="mt-5 text-2xl font-medium tracking-tight md:text-3xl">
+                  Ready to deploy.
+                </h2>
+
+                <p className="mt-3 max-w-xl text-xs leading-relaxed text-(--tertiary-color)">
+                  Your website has been successfully processed. Install the
+                  widget or try your chatbot first.
+                </p>
+
+                {/* SOURCE */}
+
+                <div className="mt-8 rounded-[8px] border border-(--border-color) bg-(--primary-color) p-4">
+
+                  <span className="text-[9px] font-semibold uppercase tracking-[0.08em] text-[#8A929D]">
+                    Website
+                  </span>
+
+                  <p className="mt-2 break-all text-[11px] text-(--secondary-color)">
+                    {newUrl}
+                  </p>
+
+                </div>
+
+                {/* GENERATED */}
+
+                <div className="mt-[18px] rounded-[8px] border border-(--border-color) bg-(--primary-color) p-[18px]">
+
+                  <div className="mb-3 flex items-center justify-between">
+
+                    <div className="flex items-center gap-[7px] text-[10px] font-semibold text-(--secondary-color)">
+
+                      <span className="grid h-[17px] w-[17px] place-items-center rounded-full bg-(--secondary-color) text-white">
+                        <Check size={10} />
+                      </span>
+
+                      Embed code
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={copySnippet}
+                      className="flex cursor-pointer items-center gap-1 border-0 bg-transparent text-[9px] font-semibold text-(--secondary-color)"
+                    >
+                      {snippetCopy ? (
+                        <Check size={13} />
+                      ) : (
+                        <Copy size={13} />
+                      )}
+
+                      {snippetCopy ? "Copied" : "Copy code"}
+                    </button>
+
+                  </div>
+
+                  <pre className="m-0 overflow-x-auto whitespace-pre-wrap break-words rounded-[5px] border border-[#E1E6EC] bg-white p-3 font-mono text-[8px] leading-[1.6] text-[#647184]">
+                    {widget.scriptSnippet}
+                  </pre>
+
+                </div>
+
+                {/* DEMO */}
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    router.push("/dashboard/chatbot-demo")
+                  }
+                  className="mt-5 flex w-full items-center justify-between rounded-[8px] border border-(--secondary-color) bg-(--secondary-color) px-4 py-3 text-left text-white transition hover:opacity-90"
+                >
+                  <span>
+                    <span className="block text-[10px] font-semibold">
+                      Try your chatbot
+                    </span>
+
+                    <span className="mt-1 block text-[8px] text-white/60">
+                      Test the RAG experience before deploying.
+                    </span>
+                  </span>
+
+                  <ArrowRight size={15} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={startOver}
+                  className="mt-5 text-[9px] font-medium text-(--tertiary-color) transition hover:text-(--secondary-color)"
+                >
+                  Start over
+                </button>
+              </div>
+
+              {/* RIGHT */}
+
+              <LivePreview widget={widget} />
+            </div>
+          )}
         </div>
-      </section>
+      </div>
     </main>
+  );
+}
+
+
+
+
+/* ================================================================
+   LIVE PREVIEW
+================================================================ */
+
+function LivePreview({
+  widget,
+}: {
+  widget: WidgetConfig;
+}) {
+  return (
+    <div className="flex min-h-[500px] flex-col bg-(--primary-color) p-5 sm:p-8">
+
+      <div className="mb-6 flex items-center justify-between">
+
+        <span className="text-[9px] font-semibold uppercase tracking-[0.08em] text-[#8A929D]">
+          Live preview
+        </span>
+
+        <span className="flex items-center gap-1.5 text-[8px] font-semibold text-[#159447]">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#22A35A]" />
+          Preview
+        </span>
+
+      </div>
+
+      <div className="flex flex-1 items-center justify-center">
+
+        <div className="w-full max-w-[332px] overflow-hidden rounded-[10px] border border-[#E2E7ED] bg-white shadow-[0_15px_40px_rgba(10,37,64,0.08)]">
+
+          {/* HEADER */}
+
+          <div className="flex h-[52px] items-center gap-[9px] border-b border-[#EDF0F4] px-[15px]">
+
+            <div
+              className="grid h-[27px] w-[27px] place-items-center rounded-[7px] text-[9px] font-bold text-white"
+              style={{
+                backgroundColor: widget.accentColor,
+              }}
+            >
+              S
+            </div>
+
+            <div>
+              <div className="text-[10px] font-semibold text-[#0A2540] pt-2">
+                {widget.name || "Assistant"}
+              </div>
+
+              <div className="text-[8px] text-[#8A929D]">
+                Ask me anything about this website
+              </div>
+            </div>
+          </div>
+
+          {/* BODY */}
+
+          <div
+            className="flex h-[275px] flex-col justify-end gap-[10px] p-[18px_14px]"
+            style={{
+              backgroundColor: widget.backgroundColor,
+            }}
+          >
+
+            <div
+              className="w-fit max-w-[80%] rounded-[7px] px-[11px] py-[9px] text-[9px] leading-[1.5]"
+              style={{
+                backgroundColor: widget.panelColor,
+                color: widget.textColor,
+              }}
+            >
+              Hi! I'm your AI assistant. I can answer questions using
+              information from this website.
+            </div>
+
+            <div
+              className="ml-auto w-fit max-w-[80%] rounded-[7px] px-[11px] py-[9px] text-[9px] leading-[1.5] text-white"
+              style={{
+                backgroundColor: widget.accentColor,
+              }}
+            >
+              What can you help me with?
+            </div>
+
+            <div
+              className="w-fit max-w-[80%] rounded-[7px] px-[11px] py-[9px] text-[9px] leading-[1.5]"
+              style={{
+                backgroundColor: widget.panelColor,
+                color: widget.textColor,
+              }}
+            >
+              I can help you find information, explain your services, and
+              answer questions about your content.
+            </div>
+
+          </div>
+
+          {/* INPUT */}
+
+          <div className="mx-3 mb-3 flex h-[38px] items-center justify-between rounded-[6px] border border-[#E1E6EC] px-[11px] text-[9px] text-[#A1A9B4]">
+
+            <span>
+              Ask a question...
+            </span>
+
+            <span
+              className="grid h-[23px] w-[23px] place-items-center rounded-[5px] text-[9px] text-white"
+              style={{
+                backgroundColor: widget.accentColor,
+              }}
+            >
+              ↑
+            </span>
+
+          </div>
+        </div>
+      </div>
+
+      <div className="mt-5 text-center text-[9px] text-[#9AA2AD]">
+        This is approximately how your chatbot will appear on your website.
+      </div>
+    </div>
   );
 }

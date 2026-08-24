@@ -1,4 +1,5 @@
 
+
 export const scriptUrl = "https://scrapcher.vercel.app/api/widget";
 
 export type Status = 'idle' | 'Scraping' | 'Done' | 'Error'
@@ -30,3 +31,18 @@ export const defaultWidgetConfig: WidgetConfig = {
       async>
       </script>`
 };
+
+export const accentPresets = [
+  {
+    name: "Black",
+    value: "#181818",
+  },
+  {
+    name: "Sky",
+    value: "#78AEFF",
+  },
+  {
+    name: "Slate",
+    value: "#686868",
+  },
+];  
