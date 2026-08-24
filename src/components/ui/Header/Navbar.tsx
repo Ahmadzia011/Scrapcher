@@ -40,12 +40,12 @@ export default function Navbar({ userName, userEmail }: NavbarProps) {
           >
             Dashboard
           </Link>
-          <Link
+          {/* <Link
             href="/dashboard"
             className="text-[15px] hover:opacity-80 transition-opacity"
           >
             Chatbots
-          </Link>
+          </Link> */}
           <Link
             href="/contact-us"
             className="text-[15px] hover:opacity-80 transition-opacity"
