@@ -75,11 +75,11 @@ export async function GET(request) {
   // SECURITY: ChatbotId is injected by server (computed as hash of origin)
   // This prevents clients from spoofing different chatbots, because now user can't use the script of other users to exploit his chabot.
   const chatbotId = "${computedChatbotId}";
-  const name = scriptTag?.dataset.name || "Assistant";
-  const accent = scriptTag?.dataset.accent || "#f59e0b";
-  const background = scriptTag?.dataset.background || "#f8fafc";
-  const panel = scriptTag?.dataset.panel || "#ffffff";
-  const text = scriptTag?.dataset.text || "#0f172a";
+  const name = scriptTag?.dataset.name ";
+  const accent = scriptTag?.dataset.accent";
+  const background = scriptTag?.dataset.background";
+  const panel = scriptTag?.dataset.panel";
+  const text = scriptTag?.dataset.text";
 
   // 3. Define Clean Reactive Native State
   const state = {

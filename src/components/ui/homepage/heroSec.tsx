@@ -43,7 +43,7 @@ export default function HeroSection() {
             headline="Write better content Faster. With AI"
             description="Scrapcher helps teams, founders, and marketers generate high-quality content in seconds — without overthinking every word"
             button_1="Get Started"
-            button_2="Try Demo"
+            button_2="Contact Us"
             large={true}
           />
 

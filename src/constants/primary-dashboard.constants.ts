@@ -17,7 +17,7 @@ export interface WidgetConfig {
 
 export const defaultWidgetConfig: WidgetConfig = {
   name: "Assistant",
-  accentColor: "#f59e0b",
+  accentColor: "#78AEFF",
   backgroundColor: "#f8fafc",
   panelColor: "#ffffff",
   textColor: "#0f172a",

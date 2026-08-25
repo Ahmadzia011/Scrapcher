@@ -45,7 +45,7 @@ export default function Footer() {
           description="Turn ideas into polished content in seconds. Generate, refine, and publish faster with AI-powered workflows designed for modern teams."
           large={true}
           button_1="Get Started"
-          button_2="Try Demo"
+          button_2="Contact Us"
         />
       </main>
 

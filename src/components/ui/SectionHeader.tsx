@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import React from "react";
 import { SectionHeaderProps } from "@/src/constants/landing.constants";
 import MainButton from "./Button";
+import Link from "next/link";
 
 
 export default function SectionHeader({
@@ -53,11 +54,11 @@ export default function SectionHeader({
         className="mt-8 flex md:flex-row flex-col w-full items-center justify-center gap-3"
       >
         {button_1 && (
-          <a><MainButton content={button_1} isDark={true}/></a>
+          <Link href={'/dashboard'}><MainButton content={button_1} isDark={true}/></Link>
         )}
 
         {button_2 && (
-          <a><MainButton content={button_2} isDark={false}/></a>
+          <Link href={'/contact-us'}><MainButton content={button_2} isDark={false}/></Link>
         )}
       </motion.div>
     </>

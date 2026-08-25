@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, Copy, ArrowRight, Sparkles } from "lucide-react";
+import { Check, Copy, ArrowRight, Sparkles, ArrowLeft } from "lucide-react";
 
 import MainButton from "@/src/components/ui/Button";
 import { storeData, isUrlScraped } from "../app/actions/storeData.actions";
@@ -114,31 +114,12 @@ export function PrimaryDashboard() {
   return (
     <main className="min-h-screen w-full flex justify-center items-center text-(--secondary-color) pt-20  bg-linear-to-b from-(--primary-color) from-0% via-[#DAE3ED] via-74% to-[#B7CAE0] to-100%">
 
-        {/* =====================================================
-            PAGE HEADER
-        ===================================================== */}
-
-      <div className="w-full max-w-[1430PX] drop-shadow-xl">
-        <div className="">
-          <div className="flex flex-col gap-5 md:flex-row md:items-end md:justify-center">
-
-            {status === "Done" && (
-              <button
-                type="button"
-                onClick={() => router.push("/dashboard/chatbot-demo")}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-(--secondary-color) px-5 text-xs font-medium text-white transition hover:opacity-85"
-              >
-                <Sparkles className="h-3.5 w-3.5" />
-                Try demo
-                <ArrowRight className="h-3.5 w-3.5" />
-              </button>
-            )}
-          </div>
-        </div>
 
         {/* =====================================================
             WORKSPACE
         ===================================================== */}
+    
+      <div className="w-full max-w-[1430PX] drop-shadow-xl">
 
         <div>
           {status === "idle" && (
@@ -435,15 +416,12 @@ export function PrimaryDashboard() {
               <div className="p-5 sm:p-7">
 
                 <div className="flex items-center gap-2">
-
-                  <span className="grid h-[18px] w-[18px] place-items-center rounded-full bg-[#22A35A] text-white">
-                    <Check size={10} />
-                  </span>
-
-                  <span className="text-[10px] font-semibold text-(--secondary-color)">
-                    Your chatbot is ready
-                  </span>
-
+                  <ArrowLeft size={10} />
+                  <button className="text-xs cursor-pointer" onClick={()=>{
+                    router.back()
+                  }}>
+                    Back 
+                  </button> 
                 </div>
 
                 <h2 className="mt-5 text-2xl font-medium tracking-tight md:text-3xl">
@@ -500,41 +478,11 @@ export function PrimaryDashboard() {
 
                   </div>
 
-                  <pre className="m-0 overflow-x-auto whitespace-pre-wrap break-words rounded-[5px] border border-[#E1E6EC] bg-white p-3 font-mono text-[8px] leading-[1.6] text-[#647184]">
+                  <pre className="m-0 overflow-x-auto whitespace-pre-wrap rounded-[5px] border border-[#E1E6EC] bg-white p-3 font-mono text-xs leading-[1.6] text-[#647184]">
                     {widget.scriptSnippet}
                   </pre>
 
-                </div>
-
-                {/* DEMO */}
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    router.push("/dashboard/chatbot-demo")
-                  }
-                  className="mt-5 flex w-full items-center justify-between rounded-[8px] border border-(--secondary-color) bg-(--secondary-color) px-4 py-3 text-left text-white transition hover:opacity-90"
-                >
-                  <span>
-                    <span className="block text-[10px] font-semibold">
-                      Try your chatbot
-                    </span>
-
-                    <span className="mt-1 block text-[8px] text-white/60">
-                      Test the RAG experience before deploying.
-                    </span>
-                  </span>
-
-                  <ArrowRight size={15} />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={startOver}
-                  className="mt-5 text-[9px] font-medium text-(--tertiary-color) transition hover:text-(--secondary-color)"
-                >
-                  Start over
-                </button>
+                </div>  
               </div>
 
               {/* RIGHT */}
