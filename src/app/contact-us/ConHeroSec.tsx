@@ -1,146 +1,148 @@
 "use client";
+
 import MainButton from "@/src/components/ui/Button";
 import SectionHeader from "@/src/components/ui/SectionHeader";
-import React from "react";
+import Image from "next/image";
+
+
 
 export default function ConHeroSec() {
   return (
-    <section className="relative min-h-screen overflow-hidden flex justify-center px-4 sm:px-6 lg:px-8 pt-28 md:pt-36 lg:pt-48 pb-16">
+    <section className="relative min-h-screen overflow-hidden px-5 pb-24 pt-36 md:pt-44">
       {/* Background Cloud */}
       <img
-        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-55 mask-[linear-gradient(to_bottom,transparent_0%,black_60%,transparent_70%)]"
-        src={"/cloud_bg.png"}
+        src="/cloud_bg.png"
         alt=""
+        className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-55 mask-[linear-gradient(to_bottom,transparent_0%,black_60%,transparent_78%)]"
       />
 
-      {/* Background Grid Pattern */}
+      {/* Background Grid */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-[1.36]"
+        className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage: `
-            linear-gradient(to right, rgba(255, 255, 255, 0.4) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 1px, transparent 1px)
+            linear-gradient(to right, rgba(255,255,255,0.4) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255,255,255,0.4) 1px, transparent 1px)
           `,
           backgroundSize: "101px 88px",
         }}
       />
 
-      {/* Hero Content Container */}
-      <main className="relative z-10 w-full max-w-7xl text-center flex flex-col items-center">
+      <main className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-center text-center">
         <SectionHeader
-          tag="contact"
-          headline="Contact Us"
-          description="Scrapcher helps teams, founders, and marketers generate high-quality content in seconds — without overthinking every word"
-          large={true}
+          tag="Contact"
+          headline="Let's talk about what you're building."
+          large={false}
         />
 
-        {/* Outer Glass Card */}
-        <div className="w-full relative mt-8 p-3 sm:p-6 lg:p-10 bg-(--primary-color)/50 border border-(--border-color) rounded-2xl justify-items-center perspective-[1000px]">
-          {/* Inner Card Grid */}
-          <div className="w-full flex flex-col lg:flex-row bg-(--primary-color) shadow-lg rounded-xl p-5 sm:p-8 gap-8 lg:gap-0">
+        {/* Contact Workspace */}
+        <div className="mt-16 w-full border border-(--border-color) bg-white/40 p-3 backdrop-blur-sm md:p-5">
+          <div className="grid overflow-hidden border border-(--border-color) bg-white shadow-sm md:grid-cols-[0.9fr_1.1fr]">
             
-            {/* Left Column */}
-            <div className="flex flex-col justify-between w-full lg:w-1/2 border-b lg:border-b-0 lg:border-r border-(--border-color) pb-8 lg:pb-0 lg:pr-8">
-              <div className="flex-1 max-w-full">
-                <p className="text-sm text-(--tertiary-color) mb-2 text-start">
-                  [ get in touch ]
-                </p>
+            {/* Left */}
+            <div className="flex min-h-125 flex-col justify-between border-b border-(--border-color) p-7 text-start md:border-b-0 md:border-r md:p-10">
 
-                {/* Main Title */}
-                <h1 className="text-xl sm:text-2xl md:text-[28px] text-start max-w-xl font-medium tracking-tighter leading-[1.1]">
-                  Tell us what you’re building
-                </h1>
+        <div className="mt-14 border-t border-(--border-color) pt-6"/>
 
-                {/* Subtitle Description */}
-                <p className="mt-3 sm:mt-4 text-(--tertiary-color) text-sm sm:text-base max-w-lg font-normal text-start">
-                  Share a few details and the Verseo team will point you toward
-                  the fastest way to create, refine, and publish better content.
-                </p>
-              </div>
-
-              <div className="mt-8 lg:mt-0">
-                <p className="text-sm text-(--tertiary-color) mb-2 text-start">
-                  [ contact us through ]
-                </p>
-                <h3 className="text-start text-lg sm:text-2xl font-medium break-all sm:break-normal">
-                  info@scrapcher.com
-                </h3>
-              </div>
+           
+           <Image src="/AI_bot.svg" alt="ai_chatbot_Avatar" width={450} height={450} className="pl-10"/>
+          
+          
+              <div className="mt-14 border-t border-(--border-color) pt-6"/>
             </div>
 
-            {/* Right Column (Form) */}
-            <div className="w-full lg:w-1/2 lg:pl-8">
-              <form className="h-full flex flex-col justify-between gap-4 text-xs font-medium text-start">
-                <div className="flex flex-col gap-4">
-                  {/* Full Name */}
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="fullName" className="opacity-80">
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      id="fullName"
-                      name="fullName"
-                      placeholder="Jane Smith"
-                      className="w-full border border-(--border-color) rounded-lg px-3.5 py-3 text-xs placeholder-text-(--secondary-color)/35 focus:outline-none focus:border-(--dark-bg)/30 transition-all"
-                      required
-                    />
-                  </div>
+            {/* Right */}
+            <div className="p-7 text-start md:p-10">
+              <div className="mb-8">
+                <p className="text-[11px] text-(--tertiary-color)">
+                  [ SEND A MESSAGE ]
+                </p>
 
-                  {/* Email Address */}
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="email" className="opacity-80">
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      placeholder="user@gmail.com"
-                      className="w-full border border-(--border-color) rounded-lg px-3.5 py-3 text-xs placeholder-text-(--secondary-color)/35 focus:outline-none focus:border-(--dark-bg)/30 transition-all"
-                      required
-                    />
-                  </div>
+                <h3 className="mt-3 text-xl font-medium tracking-tight">
+                  Tell us how we can help.
+                </h3>
+              </div>
 
-                  {/* Subject */}
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="subject" className="opacity-80">
-                      Subject
-                    </label>
-                    <input
-                      type="text"
-                      id="subject"
-                      name="subject"
-                      placeholder="How can we help?"
-                      className="w-full border border-(--border-color) rounded-lg px-3.5 py-3 text-xs placeholder-text-(--secondary-color)/35 focus:outline-none focus:border-(--dark-bg)/30 transition-all"
-                      required
-                    />
-                  </div>
+              <form className="flex flex-col gap-5">
+                <div>
+                  <label
+                    htmlFor="fullName"
+                    className="mb-2 block text-xs font-medium"
+                  >
+                    Full name
+                  </label>
 
-                  {/* Message */}
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor="message" className="opacity-80">
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows={4}
-                      placeholder="Tell us a little about what you need..."
-                      className="w-full border border-(--border-color) rounded-lg px-3.5 py-3 text-xs placeholder-text-(--secondary-color)/35 focus:outline-none focus:border-(--dark-bg)/30 transition-all resize-y"
-                      required
-                    />
-                  </div>
+                  <input
+                    id="fullName"
+                    name="fullName"
+                    type="text"
+                    placeholder="Jane Smith"
+                    required
+                    className="h-12 w-full rounded-md border border-(--border-color) bg-(--primary-color) px-4 text-sm outline-none transition placeholder:text-(--tertiary-color)/60 focus:border-(--secondary-color)/30"
+                  />
                 </div>
 
-                <div className="w-full flex justify-center mt-6 lg:mt-10">
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="mb-2 block text-xs font-medium"
+                  >
+                    Email address
+                  </label>
+
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="jane@company.com"
+                    required
+                    className="h-12 w-full rounded-md border border-(--border-color) bg-(--primary-color) px-4 text-sm outline-none transition placeholder:text-(--tertiary-color)/60 focus:border-(--secondary-color)/30"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="subject"
+                    className="mb-2 block text-xs font-medium"
+                  >
+                    Subject
+                  </label>
+
+                  <input
+                    id="subject"
+                    name="subject"
+                    type="text"
+                    placeholder="How can we help?"
+                    required
+                    className="h-12 w-full rounded-md border border-(--border-color) bg-(--primary-color) px-4 text-sm outline-none transition placeholder:text-(--tertiary-color)/60 focus:border-(--secondary-color)/30"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="message"
+                    className="mb-2 block text-xs font-medium"
+                  >
+                    Message
+                  </label>
+
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows={6}
+                    placeholder="Tell us a little about what you need..."
+                    required
+                    className="w-full resize-none rounded-md border border-(--border-color) bg-(--primary-color) px-4 py-3 text-sm leading-6 outline-none transition placeholder:text-(--tertiary-color)/60 focus:border-(--secondary-color)/30"
+                  />
+                </div>
+
+                <div className="mt-2 flex justify-start">
                   <button type="submit">
-                    <MainButton content="Submit" isDark={true} />
-                    </button>
+                    <MainButton content="Send Message" isDark={true} />
+                  </button>
                 </div>
               </form>
             </div>
-
           </div>
         </div>
       </main>

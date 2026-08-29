@@ -10,28 +10,17 @@ export default function Testimonials() {
   return (
     <section className="relative w-full min-h-screen pt-24 md:pt-[22vh]">
       <main className="relative max-w-345 mx-auto flex flex-col items-center px-5">
-        <p className="text-xs md:text-sm text-(--tertiary-color) tracking-tight mb-2">
-          [  ]
-        </p>
-
-        <h1 className="text-4xl sm:text-4xl md:text-[48px] font-semibold tracking-tighter leading-[1.1] max-w-3xl text-center">
-          
-        </h1>
-
-        <p className="mt-4 text-(--secondary-color) text-base max-w-xl font-normal tracking-tight text-center">
-          
-        </p>
 
         <SectionHeader
           tag="testimonials"
-          headline="Loved by teams that create content every day"
-          description="From marketers and founders to agencies and growing teams Verseo helps
-                        people create better content faster, without sacrificing quality or
-                        consistency."
+          headline="Trusted by growing businesses."
+          description="From SaaS products to agencies managing client sites, teams use Scrapcher
+                        to turn their website into an AI assistant their visitors can actually
+                        talk to."
           large={false}
         />
 
-        <div className="mt-10 md:mt-16 w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 md:mt-16 w-full grid grid-cols-1 md:grid-cols-3">
           {TESTIMONIALS.map((testimonial, i) => 
           {const isPrimary = i == 1
           return (
@@ -53,12 +42,12 @@ export default function Testimonials() {
                 delay: 0.2,
                 ease: easeInOut,
               }}
-              className={`flex sm:last:col-span-2 lg:last:col-span-1 border border-(--border-color) ${
+              className={`flex border border-(--border-color) ${
                 isPrimary ? "bg-(--dark-bg) p-3" : ""
               }`}
             >
               <div
-                className={`w-full text-start p-5 sm:p-6 rounded-xl flex flex-col justify-between gap-9 ${
+                className={`w-full text-start p-5 md:p-6 rounded-xl flex flex-col justify-between gap-9 ${
                   isPrimary ? "bg-(--primary-color) shadow-lg" : ""
                 }`}
               >
@@ -84,7 +73,7 @@ export default function Testimonials() {
                   </div>
 
                   {/* QUOTE TEXT */}
-                  <p className="text-[15px] sm:text-base text-(--secondary-color) font-normal leading-relaxed tracking-tight">
+                  <p className="text-[15px] md:text-base text-(--secondary-color) font-normal leading-relaxed tracking-tight">
                     {testimonial.quote}
                   </p>
                 </div>

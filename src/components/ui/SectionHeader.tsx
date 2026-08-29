@@ -31,20 +31,20 @@ export default function SectionHeader({
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className={`${large ? "sm:text-5xl md:text-6xl" : "sm:text-4xl md:text-[48px]"} text-center max-w-xl text-4xl font-semibold tracking-tighter leading-[1.1] `}
+        className={`${large ? "md:text-6xl" : "md:text-[48px]"} text-center max-w-[650px] text-4xl font-semibold tracking-tighter leading-[1.1] `}
       >
         {headline}
       </motion.h1>
 
       {/* Subtitle Description */}
-      <motion.p
+     {description &&  <motion.p
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="mt-4 text-(--secondary-color) sm:text-lg max-w-xl font-normal leading-relaxed  text-center"
+        className="mt-4 text-(--secondary-color) md:text-lg max-w-xl font-normal leading-relaxed  text-center"
       >
         {description}
-      </motion.p>
+      </motion.p>}
 
       {/* Action Buttons */}
       <motion.div

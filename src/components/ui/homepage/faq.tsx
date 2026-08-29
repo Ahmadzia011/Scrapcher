@@ -10,15 +10,14 @@ export default function Faq() {
   const [openIndex, setOpenIndex] = useState<number>(0);
 
   return (
-    <section className="relative w-full min-h-screen py-[12vh] md:pt-[22vh] md:pb-[30vh]">
+    <section className="relative w-full min-h-screen pt-24 md:pt-[22vh]">
       <main className="relative max-w-345 mx-auto text-center flex flex-col justify-center items-center px-5">
   
 
           <SectionHeader
             tag="faq"
-            headline=" Everything you need to know"
-            description=" Whether you’re creating content solo or collaborating with a team,
-                          there’s a plan designed for your workflow."
+            headline="Frequently asked questions."
+            description="Everything you need to know about turning your website into an AI assistant."
             large={false}
           />
 
@@ -32,21 +31,21 @@ export default function Faq() {
               return (
                 <div
                   key={faq.question}
-                  className="w-full border border-(--border-color) rounded-lg p-1.5 sm:p-2.5"
+                  className="w-full border border-(--border-color) rounded-lg p-1.5 md:p-2.5"
                 >
                   <button
                     onClick={() => setOpenIndex(isOpen ? -1 : realIndex)}
                     className={`w-full flex flex-col text-left transition-all rounded-xl cursor-pointer ${
                       isOpen
-                        ? "bg-(--primary-color) p-4 sm:p-6 shadow-lg"
-                        : "px-4 py-3 sm:px-6"
+                        ? "bg-(--primary-color) p-4 md:p-6 shadow-lg"
+                        : "px-4 py-3 md:px-6"
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <h3 className="text-base sm:text-lg lg:text-xl font-medium tracking-tight">
+                      <h3 className="text-base md:text-xl font-medium tracking-tight">
                         {faq.question}
                       </h3>
-                      <span className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded border border-(--border-color)">
+                      <span className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 shrink-0 rounded border border-(--border-color)">
                         {isOpen ? (
                           <motion.div animate={{ rotate: "720deg" }}>
                             <Minus
@@ -94,21 +93,21 @@ export default function Faq() {
               return (
                 <div
                   key={faq.question}
-                  className="w-full border border-(--border-color) rounded-lg p-1.5 sm:p-2.5"
+                  className="w-full border border-(--border-color) rounded-lg p-1.5 md:p-2.5"
                 >
                   <button
                     onClick={() => setOpenIndex(isOpen ? -1 : realIndex)}
                     className={`w-full flex flex-col text-left transition-all rounded-xl cursor-pointer ${
                       isOpen
-                        ? "bg-(--primary-color) p-4 sm:p-6 shadow-lg"
-                        : "px-4 py-3 sm:px-6"
+                        ? "bg-(--primary-color) p-4 md:p-6 shadow-lg"
+                        : "px-4 py-3 md:px-6"
                     }`}
                   >
                     <div className="flex items-center justify-between">
-                      <h3 className="text-base sm:text-lg lg:text-xl font-medium tracking-tight">
+                      <h3 className="text-base md:text-xl font-medium tracking-tight">
                         {faq.question}
                       </h3>
-                      <span className="flex items-center justify-center w-8 h-8 sm:w-10 sm:h-10 shrink-0 rounded border border-(--border-color)">
+                      <span className="flex items-center justify-center w-8 h-8 md:w-10 md:h-10 shrink-0 rounded border border-(--border-color)">
                         {isOpen ? (
                           <motion.div animate={{ rotate: "720deg" }}>
                             <Minus

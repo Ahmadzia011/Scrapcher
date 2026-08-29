@@ -1,59 +1,7 @@
-import Supabase from '@/src/lib/supabase';
-import crypto from 'crypto';
-
-const supabase = Supabase();
-
-// Helper: Compute chatbotId from origin (SHA256 hash)
-function computeChatbotId(origin) {
-  return crypto.createHash("sha256").update(origin).digest("hex");
-}
-
+// Origin/chatbotId verification happens in proxy.ts before this runs —
+// the chatbotId here is already trusted.
 export async function GET(request) {
-  const incomingReferer = request.headers.get('referer');
-  const incomingOrigin = request.headers.get('origin');
-
-  let clientDomain = '';
-
-  // Step 1: Extract domain from headers
-  if (incomingOrigin) {
-    clientDomain = incomingOrigin;
-  }
-   else if (incomingReferer) {
-    try {
-      clientDomain = new URL(incomingReferer).origin;
-    } catch (e) {
-      return new Response(JSON.stringify({ error: "Invalid Referer header format." }), {
-        status: 400,
-        headers: { "Content-Type": "application/json" }
-      });
-    }
-  } else {
-    return new Response(JSON.stringify({ error: "Access Denied: Missing mandatory browser routing identification." }), {
-      status: 403,
-      headers: { "Content-Type": "application/json" }
-    });
-  }
-
-  // Step 2: Verify domain has registered documents
-  const { data, error } = await supabase
-    .from('documents')
-    .select('id')
-    .filter('metadata->>origin', 'eq', clientDomain)
-    .limit(1);
-
-  if (error || !data || data.length === 0) {
-    return new Response(JSON.stringify({ error: "Unauthorized domain configuration." }), {
-      status: 403,
-      headers: { 
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": clientDomain 
-      }
-    });
-  }
-
-  // Step 3: Compute chatbotId for this domain
-  const computedChatbotId = computeChatbotId(clientDomain);
-  console.log(`[Widget] Domain: ${clientDomain}, ChatbotId: ${computedChatbotId}`);
+  const computedChatbotId = request.headers.get('x-chatbot-id');
 
   // The complete widget script represented as a raw text string payload
   const widgetScript = `
@@ -72,9 +20,6 @@ export async function GET(request) {
     console.error("Scrapcher Widget: Script tag not detected correctly.");
   }
 
-  // SECURITY: ChatbotId is injected by server (computed as hash of origin)
-  // This prevents clients from spoofing different chatbots, because now user can't use the script of other users to exploit his chabot.
-  const chatbotId = "${computedChatbotId}";
   const name = scriptTag?.dataset.name ";
   const accent = scriptTag?.dataset.accent";
   const background = scriptTag?.dataset.background";
@@ -278,8 +223,7 @@ export async function GET(request) {
         },
           body: JSON.stringify({
           query: currentQueryText,
-          history: historyToSend,
-          chatbotId:chatbotId
+          history: historyToSend
         }),
       });
 

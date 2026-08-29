@@ -1,11 +1,4 @@
-import { getResponse } from "@/src/lib/rag/responseGenerator";
-import Supabase from "@/src/lib/supabase";
-import crypto from "crypto";
-
-// Helper: Compute chatbotId from origin (SHA256 hash)
-function computeChatbotId(origin: string): string {
-  return crypto.createHash("sha256").update(origin).digest("hex");
-}
+import { getResponse } from "@/src/components/rag/responseGenerator";
 
 // 1. Handle the browser's preflight OPTIONS request
 export async function OPTIONS(request: Request) {
@@ -21,43 +14,17 @@ export async function OPTIONS(request: Request) {
 }
 
 // Handle POST requests
+// Origin/chatbotId verification happens in proxy.ts before this runs —
+// the chatbotId here is already trusted.
 export async function POST(request: Request) {
-  const supabase = Supabase();
-
-  // Step 1: Extract origin from request headers
-  const originHeader = request.headers.get("origin");
-  const refererHeader = request.headers.get("referer");
-  let origin: string | null = originHeader;
-
-  if (!origin && refererHeader) {
-    try {
-      origin = new URL(refererHeader).origin;
-    } catch (e) {
-      origin = null;
-    }
-  }
-
-  if (!origin) {
-    return new Response(
-      JSON.stringify({ error: "Origin or Referer header is required." }),
-      {
-        status: 400,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-      },
-    );
-  }
+  const origin = request.headers.get("origin") || "*";
+  const chatbotId = request.headers.get("x-chatbot-id")!;
 
   try {
-    // Step 3: Parse request body
     const body = await request.json();
     const query = body.query;
     const history = body.history || [];
-    const clientChatbotId = body.chatbotId;
 
-    // Step 4: Validate query parameter
     if (!query || typeof query !== "string" || query.trim() === "") {
       return new Response(
         JSON.stringify({
@@ -80,54 +47,7 @@ export async function POST(request: Request) {
       });
     }
 
-    // Step 5: Verify domain has documents in database
-    const { data: domainDocuments, error: domainError } = await supabase
-      .from("documents")
-      .select("id")
-      .filter("metadata->>origin", "eq", origin)
-      .limit(1);
-
-    if (domainError || !domainDocuments || domainDocuments.length === 0) {
-      return new Response(
-        JSON.stringify({ error: "Unauthorized domain configuration." }),
-        {
-          status: 403,
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": origin,
-          },
-        },
-      );
-    }
-
-    // Step 6: Verify chatbotId hash matches origin (CRITICAL SECURITY CHECK)
-    const expectedChatbotId = computeChatbotId(origin);
-
-    if (!clientChatbotId) {
-      return new Response(JSON.stringify({ error: "chatbotId is required." }), {
-        status: 400,
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": origin,
-        },
-      });
-    }
-
-    if (clientChatbotId !== expectedChatbotId) {
-      return new Response(
-        JSON.stringify({ error: "Invalid chatbotId for this domain." }),
-        {
-          status: 403,
-          headers: {
-            "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": origin,
-          },
-        },
-      );
-    }
-
-    // Step 8: Call RAG pipeline with verified chatbotId
-    const responseData = await getResponse(clientChatbotId, query, history);
+    const responseData = await getResponse(chatbotId, query, history);
 
     return new Response(JSON.stringify(responseData), {
       status: 200,
@@ -144,7 +64,7 @@ export async function POST(request: Request) {
         status: 500,
         headers: {
           "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": origin || "*",
+          "Access-Control-Allow-Origin": origin,
         },
       },
     );

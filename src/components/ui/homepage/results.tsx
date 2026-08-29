@@ -4,33 +4,31 @@ import { RESULTS_STATS } from "@/src/constants/landing.constants";
 import { easeInOut, motion } from "framer-motion";
 import Marquee from "react-fast-marquee";
 import {
-  AtSign,
-  Bold,
-  Briefcase,
-  Camera,
-  Eraser,
-  Gamepad2,
-  Italic,
-  Mail,
-  Music2,
-  Play,
-  Share2,
-  ThumbsUp,
-  X,
+  Boxes,
+  Braces,
+  Database,
+  FileCode2,
+  Globe,
+  Layout,
+  MessageSquare,
+  Puzzle,
+  ShoppingBag,
+  Terminal,
+  Zap,
 } from "lucide-react";
 import SectionHeader from "@/src/components/ui/SectionHeader";
 import MainButton from "@/src/components/ui/Button";
 
 const PLATFORMS = [
-  { icon: Mail, label: "Gmail" },
-  { icon: X, label: "X" },
-  { icon: Camera, label: "Instagram" },
-  { icon: Music2, label: "TikTok" },
-  { icon: ThumbsUp, label: "Facebook" },
-  { icon: Play, label: "YouTube" },
-  { icon: Gamepad2, label: "Discord" },
-  { icon: AtSign, label: "Threads" },
-  { icon: Briefcase, label: "LinkedIn" },
+  { icon: Globe, label: "Any Website" },
+  { icon: Boxes, label: "WordPress" },
+  { icon: ShoppingBag, label: "Shopify" },
+  { icon: Layout, label: "Webflow" },
+  { icon: Braces, label: "React" },
+  { icon: Terminal, label: "Next.js" },
+  { icon: FileCode2, label: "HTML" },
+  { icon: Database, label: "CMS" },
+  { icon: Puzzle, label: "Custom Stack" },
 ];
 
 
@@ -42,7 +40,7 @@ export default function Results() {
         <SectionHeader 
           tag="results"  
           headline="See the impact instantly"
-          description="Create content faster, stay consistent across every channel, and achieve better results with less effort."
+          description="Fewer support tickets, faster answers, and an assistant that stays accurate to your website."
           large={false}
         />
 
@@ -62,56 +60,56 @@ export default function Results() {
               <div className="space-y-8 w-full">
                 <div className="space-y-3 ">
                   <h3 className="text-2xl font-medium leading-tight">
-                    Stay in the flow
+                    Answers, not guesswork
                   </h3>
                   <p className="text-sm text-(--secondary-color)">
-                    Keep momentum while writing. Generate, improve, and expand
-                    ideas without breaking your creative process.
+                    Your assistant answers using real content from your site,
+                    accurate, current, and consistent every time.
                   </p>
                   <p className="italic text-xs text-(--tertiary-color)">
-                    No more switching between tools and tabs.
+                    No manual training. No prompt engineering.
                   </p>
                 </div>
-                <a href=""><MainButton content="Start Writing" isDark={true}/></a>
+                <a href=""><MainButton content="Get Started" isDark={true}/></a>
               </div>
             </div>
           </div>
 
           {/* Right column */}
           <div className="bg-(--primary-color) flex flex-col">
-            <div className="flex flex-wrap items-center gap-4 p-5 sm:p-6 border-b border-(--border-color)">
+            <div className="flex flex-wrap items-center gap-4 p-5 md:p-6 border-b border-(--border-color)">
              
              <img src={'image.png'} className=""/>
 
               <div className="min-w-0 flex-1 basis-40">
-                <h3 className="text-lg sm:text-xl font-medium truncate">Ready to Publish</h3>
+                <h3 className="text-lg md:text-xl font-medium truncate">Ready to deploy</h3>
                 <p className="italic text-xs text-(--tertiary-color)">
-                  Review, edit, regenerate, and export your content wherever
-                  you need it.
+                  Preview responses, then embed your assistant anywhere with
+                  one script.
                 </p>
               </div>
 
               <div className="flex items-center gap-1 bg-(--primary-color) border-2 border-(--border-color) rounded px-2 py-1 shrink-0">
-                <Bold size={16} className="p-1 box-content shrink-0" />
-                <Share2 size={16} className="p-1 box-content shrink-0" />
-                <Italic size={16} className="p-1 box-content shrink-0" />
-                <Eraser size={16} className="p-1 box-content shrink-0" />
+                <Globe size={16} className="p-1 box-content shrink-0" />
+                <Database size={16} className="p-1 box-content shrink-0" />
+                <MessageSquare size={16} className="p-1 box-content shrink-0" />
+                <Zap size={16} className="p-1 box-content shrink-0" />
               </div>
             </div>
 
-            <div className="min-w-0 grid grid-cols-1 sm:grid-cols-2">
+            <div className="min-w-0 grid grid-cols-1 md:grid-cols-2">
               {RESULTS_STATS.map((stat, i) => (
                 <div
                   key={i}
-                  className={`min-w-0 p-5 sm:p-6 border-b border-(--border-color) flex flex-col justify-between gap-6 sm:gap-10 ${
-                    i === 0 ? "sm:border-r" : ""
+                  className={`min-w-0 p-5 md:p-6 border-b border-(--border-color) flex flex-col justify-between gap-6 md:gap-10 ${
+                    i === 0 ? "md:border-r" : ""
                   }`}
                 >
                   <div>
                     <p className="text-sm font-light uppercase tracking-tight">
                       {stat.label}
                     </p>
-                    <p className="text-4xl sm:text-[46px] font-medium tracking-tight">
+                    <p className="text-4xl md:text-[46px] font-medium tracking-tight">
                       {stat.value}
                     </p>
                   </div>
@@ -124,13 +122,13 @@ export default function Results() {
               ))}
             </div>
 
-            <div className="min-w-0 p-5 sm:p-6 flex flex-col gap-5">
+            <div className="min-w-0 p-5 md:p-6 flex flex-col gap-5">
               <div>
-                <h3 className="text-lg sm:text-xl font-medium">
-                  Content that fits anywhere
+                <h3 className="text-lg md:text-xl font-medium">
+                  Works with any website
                 </h3>
                 <p className="italic text-xs text-(--tertiary-color)">
-                  From social posts to long-form content.
+                  WordPress, Shopify, Webflow, or custom-built, plug in anywhere.
                 </p>
               </div>
 
@@ -140,7 +138,7 @@ export default function Results() {
                   return (
                     <div
                       key={i}
-                      className="mx-1.5 sm:mx-2 w-14 h-14 sm:w-16 sm:h-16 shrink-0 flex items-center justify-center rounded bg-white border border-(--border-color)"
+                      className="mx-1.5 md:mx-2 w-14 h-14 md:w-16 md:h-16 shrink-0 flex items-center justify-center rounded bg-white border border-(--border-color)"
                     >
                       <Icon size={24} className="text-(--secondary-color)" />
                     </div>

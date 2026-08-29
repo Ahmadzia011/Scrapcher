@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { User, ChevronDown } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MainButton from "../Button";
 import { signOut, signIn } from "next-auth/react";
+import Image from "next/image";
 
 interface NavbarProps {
   userName?: string;
@@ -15,14 +15,14 @@ interface NavbarProps {
 export default function Navbar({ userName, userEmail }: NavbarProps) {
   console.log(userEmail);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
-    <header className="fixed z-50 w-full bg-(--primary-color) border-b border-(--border-color) h-25">
+    <header className="absolute z-50 w-full h-25 border-b border-(--border-color)">
       {/* <span className="md:hidden flex w-full text-xs justify-center">{userEmail}</span> */}
-      <div className="w-full max-w-345 h-full mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between relative">
+      <div className="w-full max-w-345 h-full mx-auto px-4 md:px-8 flex items-center justify-between relative">
         {/* Left: Logo */}
-        <div className="text-xl font-semibold cursor-pointer z-10">
+        <div className="text-xl font-semibold cursor-pointer z-10 flex items-center">
+          <Image src="/AI_bot.svg" alt="bot_avatar" height={50} width={50}/>
           <Link href="/">Scrapcher</Link>
         </div>
 
@@ -66,7 +66,7 @@ export default function Navbar({ userName, userEmail }: NavbarProps) {
               y: mobileMenuOpen ? 4 : 0,
             }}
             transition={{ duration: 0.15 }}
-            className="w-6 h-[2px] bg-(--secondary-color) rounded-full block"
+            className="w-6 h-0.6 bg-(--secondary-color) rounded-full block"
           />
           <motion.span
             animate={{
@@ -74,7 +74,7 @@ export default function Navbar({ userName, userEmail }: NavbarProps) {
               y: mobileMenuOpen ? -4 : 0,
             }}
             transition={{ duration: 0.15 }}
-            className="w-6 h-[2px] bg-(--secondary-color) rounded-full block"
+            className="w-6 h-0.6 bg-(--secondary-color) rounded-full block"
           />
         </button>
 
@@ -82,7 +82,11 @@ export default function Navbar({ userName, userEmail }: NavbarProps) {
           <a
             className="hidden md:flex"
             onClick={() => {
-              userEmail ? signOut() : signIn();
+              if (userEmail) {
+                signOut();
+              } else {
+                signIn();
+              }
             }}
           >
             <MainButton

@@ -1,7 +1,7 @@
 import { SupabaseVectorStore } from "@langchain/community/vectorstores/supabase";
 import { CohereRerank } from "@langchain/cohere";
 import { ContextualCompressionRetriever } from "@langchain/classic/retrievers/contextual_compression";
-import supabase from "../supabase";
+import supabase from "@/src/lib/supabase";
 import { embeddingModel } from "@/src/lib/chat-model";
 
 export async function retrieveData(chatbotId: any, question: any) {
@@ -15,15 +15,15 @@ export async function retrieveData(chatbotId: any, question: any) {
   });
 
     const baseRetriever = vectorStore.asRetriever({
-    k: 20, 
+    k: 30,
     filter: { chatbotId: chatbotId },
   });
-  
+
   const reranker = new CohereRerank(
     {
       model: "rerank-english-v3.0",
       apiKey: process.env.COHERE_API_KEY,
-      topN: 5
+      topN: 8
     }
   )
 

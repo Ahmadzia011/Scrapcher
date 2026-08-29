@@ -1,15 +1,11 @@
 "use server";
 
-import crypto from 'crypto';
-import scrapper from '../../lib/rag/scraper';
-import { embedData } from '@/src/lib/rag/embedder';
 import Supabase from '@/src/lib/supabase';
+import { embedData } from '@/src/components/rag/embedder';
+import scrapeUrl from '@/src/components/rag/scraper';
+import { computeChatbotId } from '@/src/lib/chatbotId';
 
 
-
-export async function hashString(url: string) {
-  return crypto.createHash('sha256').update(url).digest('hex');
-}
 
 export async function storeData(urlInput: string) {
 
@@ -51,7 +47,7 @@ export async function storeData(urlInput: string) {
   } catch (e: any) {
     console.error("Python scraper failed, falling back to local scraper:", e.message);
 
-    const fallback = await scrapper(urlInput);
+    const fallback = await scrapeUrl(urlInput);
     if (!fallback?.content || !fallback?.origin) {
       console.error("Fallback scraper failed or returned no content.");
       return "error";
@@ -63,7 +59,7 @@ export async function storeData(urlInput: string) {
   }
 	
 
-  const chatbotId = await hashString(origin)
+  const chatbotId = computeChatbotId(origin)
  
   try {
     await embedData(content, origin, chatbotId);
@@ -90,7 +86,7 @@ export async function isUrlScraped(urlInput: string | URL) {
     .select("metadata")
     .eq("metadata->>origin", normalizedUrl)
 
-    const chatbot_id = await hashString(normalizedUrl)
+    const chatbot_id = computeChatbotId(normalizedUrl)
   // Return the origin if data exists, null otherwise
   return foundData.data && foundData.data.length > 0 ? chatbot_id : null;
 }

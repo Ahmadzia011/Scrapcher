@@ -1,80 +1,76 @@
+import { Globe, MessageSquare, Code2 } from "lucide-react";
 
 export interface SectionHeaderProps {
   tag: string;
   headline: string;
-  description: string;
+  description?: string;
   button_1?: string;
   button_2?: string;
   large: boolean
 }
 
 export const FEATURES = [
-  {image : 'image.png', heading: 'Smart Rewrite', description: 'Improve clarity, structure, and tone instantly without rewriting from scratch.', },
-  {image : 'image.png', heading: 'AI Writing', description: 'Start from a simple idea and turn it into structured, high-quality content in seconds.', },
-  {image : 'image.png', heading: 'Tone Control', description: 'Keep your voice consistent across every channel — from emails to social posts.', },
-  {image : 'image.png', heading: 'Ready Templates', description: 'Use proven formats for real-world use cases — from ads to product descriptions.', },
-]
+  {
+    icon: Globe,
+    heading: "Smart Website Scraping",
+    description:
+      "Automatically crawl and understand your website to build a complete knowledge base for your AI assistant.",
+    footer: "Supports documentation, blogs, and marketing pages.",
+  },
+  {
+    icon: MessageSquare,
+    heading: "AI Chat Preview",
+    description:
+      "Test your assistant inside Scrapcher before making it available to your visitors.",
+    footer: "Improve confidence before deployment.",
+  },
+  {
+    icon: Code2,
+    heading: "One-Click Embedding",
+    description:
+      "Deploy your assistant anywhere with a lightweight embed script that works with any website.",
+    footer: "Lightweight, customizable, and production ready.",
+  },
+];
 
 export const HOW_IT_WORKS_STEPS = [
   {
     step: "Step 1",
-    heading: "Enter your idea",
+    heading: "Add your website",
     description:
-      "Describe what you want to create in a simple prompt - even a rough idea works.",
+      "Enter your URL and Scrapcher crawls your pages and prepares them for indexing.",
     tagline:
-      "The simpler the input, the faster you get results"
+      "Point Scrapcher at your website"
   },
   {
     step: "Step 2",
-    heading: "Generate content",
+    heading: "Scrape and train",
     description:
-      "Verseo turns your input into structured, high-quality content in seconds.",
+      "Your content is cleaned, chunked, and embedded into a knowledge base that powers your assistant.",
     tagline:
-      "Watch your content take shape"
+      "Turn pages into a knowledge base"
   },
   {
     step: "Step 3",
-    heading: "Refine and publish",
-    description: "Adjust tone, edit, and use your content anywhere - ready when you are.",
+    heading: "Preview and embed",
+    description: "Test every response inside the dashboard, then deploy with a single embed script.",
     tagline:
-      "Refine your content before publishing"
+      "Ship your assistant with confidence"
   },
 ];
 
-export const USE_CASES = [
-    {
-      id:'001',
-      title : 'For marketers',
-      description: 'Write product copy, pitches, and updates with more clarity and less effort.Turn rough ideas into structured messaging that clearly explains your product, value, and positioning. '
-
-    },
-    {
-      id:'002',
-      title : 'For teams',
-      description: 'Write product copy, pitches, and updates with more clarity and less effort.Turn rough ideas into structured messaging that clearly explains your product, value, and positioning. '
-
-    },
-    {
-      id:'003',
-      title : 'For marketers',
-      description: 'Write product copy, pitches, and updates with more clarity and less effort.Turn rough ideas into structured messaging that clearly explains your product, value, and positioning. '
-
-    }
-  ]
-
-
 export const RESULTS_STATS = [
   {
-    label: "Less time spent editing",
-    value: "87%",
+    label: "Fewer repetitive tickets",
+    value: "70%",
     description:
-      "Refine and finalize content faster with AI-powered suggestions and rewrites.",
+      "Visitors get accurate answers instantly, without waiting on your support team.",
   },
   {
-    label: "Brand Voice",
-    value: "100%",
+    label: "Answer accuracy",
+    value: "99%",
     description:
-      "Keep messaging aligned across emails, social media, landing pages, and campaigns.",
+      "Every response is grounded in your website's actual content, not guesswork.",
   },
 ];
 
@@ -82,40 +78,40 @@ export const PLANS = [
   {
     id: "starter",
     name: "Starter",
-    tagline: "For individuals and freelancers",
+    tagline: "For solo builders and small sites",
     monthly: 12,
     featured: false,
     features: [
-      "AI writing assistant",
-      "Essential content templates",
-      "Rewrite and improve text",
+      "1 AI assistant",
+      "Up to 100 pages crawled",
+      "Unlimited preview chats",
       "Standard support",
     ],
   },
   {
     id: "pro",
     name: "Pro",
-    tagline: "For creators and professionals",
+    tagline: "For growing businesses",
     monthly: 29,
     featured: true,
     features: [
-      "Advanced AI generation",
-      "Brand voice controls",
-      "Full template library",
-      "Priority content tools",
+      "5 AI assistants",
+      "Up to 1,000 pages crawled",
+      "Custom branding",
+      "Priority support",
     ],
   },
   {
     id: "team",
     name: "Team",
-    tagline: "For agencies and growing teams",
+    tagline: "For agencies and larger teams",
     monthly: 79,
     featured: false,
     features: [
-      "Shared workspace",
-      "Team collaboration tools",
-      "Unlimited team projects",
-      "Priority support",
+      "Unlimited AI assistants",
+      "Unlimited pages crawled",
+      "Shared team workspace",
+      "Dedicated support",
     ],
   },
 ];
@@ -123,34 +119,34 @@ export const PLANS = [
 
 export const FAQS = [
   {
-    question: "What is Verseo?",
+    question: "What is Scrapcher?",
     answer:
-      "Verseo is an AI-powered writing assistant that helps you generate, rewrite, and improve content in seconds. From emails and social posts to product descriptions and marketing copy, it helps you create content faster with less effort.",
+      "Scrapcher turns your website into an AI assistant. It crawls your site, builds a knowledge base from your content, and lets visitors ask questions and get accurate answers based on what's actually on your website.",
   },
   {
-    question: "Who is Verseo designed for?",
+    question: "Who is Scrapcher designed for?",
     answer:
-      "Verseo is built for founders, marketers, and teams who need to create high-quality content quickly, without sacrificing consistency or brand voice.",
+      "Scrapcher is built for businesses that want to give visitors instant answers, from SaaS products and documentation sites to agencies managing client websites.",
   },
   {
-    question: "Do I need any writing experience?",
+    question: "Do I need any technical experience?",
     answer:
-      "No writing experience is required. Verseo guides you through generating and refining content, so anyone can produce polished copy in minutes.",
+      "No. Add your website URL and Scrapcher handles crawling, processing, and training automatically. Deploying the assistant only takes a single embed script.",
   },
   {
-    question: "Can I customize the generated content?",
+    question: "Can I customize my assistant?",
     answer:
-      "Yes, every piece of generated content can be edited, rewritten, and fine-tuned to match your tone and style.",
+      "Yes. You can preview and refine how your assistant responds, and customize its appearance before embedding it on your website.",
   },
   {
-    question: "What types of content can I create?",
+    question: "What content does Scrapcher use to answer questions?",
     answer:
-      "You can create emails, social posts, product descriptions, marketing copy, and much more with Verseo.",
+      "Scrapcher only uses the content it crawls from your website, so every answer stays grounded in your actual pages.",
   },
   {
-    question: "How fast can I generate content?",
+    question: "How long does it take to set up?",
     answer:
-      "Most content is generated in seconds, letting you go from idea to finished copy almost instantly.",
+      "Most sites are crawled and ready to preview within minutes. From there, deploying the assistant takes one script tag.",
   },
 ];
 
@@ -161,10 +157,10 @@ export const FOOTER_LINKS = {
     { label: "404 page", href: "#" },
   ],
   navigation: [
-    { label: "Product", href: "#" },
-    { label: "Use Cases", href: "#" },
-    { label: "Examples", href: "#" },
+    { label: "Features", href: "#" },
+    { label: "How It Works", href: "#" },
     { label: "Pricing", href: "#" },
+    { label: "FAQ", href: "#" },
   ],
   social: [
     { label: "X", href: "#" },
@@ -176,23 +172,23 @@ export const FOOTER_LINKS = {
 export const TESTIMONIALS = [
   {
     quote:
-      '"We tested several AI writing tools, but Verseo felt the most practical. It\'s fast, intuitive, and fits naturally into our workflow."',
+      '"We pointed Scrapcher at our help center and had a working AI assistant answering support questions the same day."',
     rating: "4,9",
     author: "Emma Rodriguez",
-    role: "Content Strategist",
+    role: "Head of Customer Support",
     image: "/client.avif",
   },
   {
     quote:
-      '"Verseo cut our content creation time in half. What used to take hours now takes minutes, and the quality is consistently high."',
+      '"Scrapcher cut our support ticket volume in half. Visitors get instant answers pulled straight from our website."',
     rating: "5,0",
     author: "Sarah Chen",
-    role: "Marketing Manager",
+    role: "Product Marketing Manager",
     image: "/client.avif",
   },
   {
     quote:
-      '"The biggest win for us is consistency. Every email, post, and product update sounds like it comes from the same brand voice."',
+      '"Setup took minutes. We added our URL, previewed the responses, and embedded the assistant on our site the same afternoon."',
     rating: "5,0",
     author: "David Miller",
     role: "Startup Founder",

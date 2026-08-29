@@ -10,20 +10,19 @@ export default function Pricing() {
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
 
   return (
-    <section className="relative w-full min-h-screen py-[12vh] md:pt-[22vh] md:pb-0">
+    <section className="relative w-full min-h-screen pt-24 md:pt-[22vh]">
       <main className="relative max-w-345 mx-auto text-center flex flex-col justify-center items-center px-5">
 
         <SectionHeader 
           tag="pricing"
-          headline="Choose the plan that grows with you"
-          description=" Whether you’re creating content solo or collaborating with a team,
-          there’s a plan designed for your workflow."
+          headline="Simple pricing that scales with you."
+          description="Start with one assistant, then grow into more pages, more assistants, and more seats."
           large={false}
           />
-        <div className="mt-10 md:mt-15 flex w-full max-w-67 sm:w-auto p-1 border-2 border-(--border-color)">
+        <div className="mt-10 md:mt-15 flex w-full max-w-67 md:w-auto p-1 border-2 border-(--border-color)">
           <button
             onClick={() => setBilling("monthly")}
-            className={`flex-1 sm:w-32 sm:flex-none h-10.5 rounded text-[15px] transition-all ${
+            className={`flex-1 md:w-32 md:flex-none h-10.5 rounded text-[15px] transition-all ${
               billing === "monthly"
                 ? "bg-(--secondary-color) text-(--primary-color)"
                 : "text-(--secondary-color)"
@@ -33,7 +32,7 @@ export default function Pricing() {
           </button>
           <button
             onClick={() => setBilling("annual")}
-            className={`flex-1 sm:w-32 sm:flex-none h-10.5 rounded text-[15px] transition-all ${
+            className={`flex-1 md:w-32 md:flex-none h-10.5 rounded text-[15px] transition-all ${
               billing === "annual"
                 ? "bg-(--secondary-color) text-(--primary-color)"
                 : "text-(--secondary-color)"
@@ -43,7 +42,7 @@ export default function Pricing() {
           </button>
         </div>
 
-        <div className="mt-10 md:mt-16 w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 md:mt-16 w-full grid grid-cols-1 md:grid-cols-3">
           {PLANS.map((plan, i) => (
              <motion.div
                 key={i}
@@ -63,10 +62,10 @@ export default function Pricing() {
                   delay: 0.2,
                   ease: easeInOut,
                 }}              
-              className={` flex sm:last:col-span-2 lg:last:col-span-1 border border-(--border-color) ${plan.featured ? "bg-(--dark-bg) p-3" : ""}`}
+              className={` flex border border-(--border-color) ${plan.featured ? "bg-(--dark-bg) p-3" : ""}`}
             >
               <div
-                className={`w-full text-start p-5 sm:p-6 rounded-xl flex flex-col gap-6  ${
+                className={`w-full text-start p-5 md:p-6 rounded-xl flex flex-col gap-6  ${
                   plan.featured ? "bg-(--primary-color) shadow-lg" : ""
                 }`}
               >
@@ -88,7 +87,7 @@ export default function Pricing() {
                   </p>
                 </div>
 
-                <p className="text-4xl sm:text-[44px] font-medium tracking-tight">
+                <p className="text-4xl md:text-[44px] font-medium tracking-tight">
                   ${plan.monthly}
                 </p>
 

@@ -34,15 +34,19 @@ export const defaultWidgetConfig: WidgetConfig = {
 
 export const accentPresets = [
   {
-    name: "Black",
-    value: "#181818",
-  },
-  {
     name: "Sky",
-    value: "#78AEFF",
+    value: "#4F7BFF",
   },
   {
-    name: "Slate",
-    value: "#686868",
+    name: "Aqua",
+    value: "#18A7B5",
+  },
+  {
+    name: "Violet",
+    value: "#7C5CFF",
+  },
+  {
+    name: "Charcoal",
+    value: "#181818",
   },
 ];  
