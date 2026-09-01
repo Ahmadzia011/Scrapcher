@@ -11,7 +11,7 @@ export default function ConHeroSec() {
     <section className="relative min-h-screen overflow-hidden px-5 pb-24 pt-36 md:pt-44">
       {/* Background Cloud */}
       <img
-        src="/cloud_bg.png"
+        src="/cloud_bg.webp"
         alt=""
         className="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-55 mask-[linear-gradient(to_bottom,transparent_0%,black_60%,transparent_78%)]"
       />

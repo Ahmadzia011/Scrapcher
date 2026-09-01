@@ -37,7 +37,7 @@ export default function HowItWorks() {
     <section  ref={containerRef} className="relative w-full min-h-[300vh] pt-24 md:pt-[22vh]">
       <img
         className="pointer-events-none absolute h-full w-full object-cover opacity-55 mask-[linear-gradient(to_bottom,transparent_0%,black_55%,transparent_100%)]"
-        src={"/cloud_bg.png"}
+        src={"/cloud_bg.webp"}
       ></img>
       <div className="relative">
         <div className="max-w-345 mx-auto text-center flex flex-col justify-center items-center px-5 md:px-8">

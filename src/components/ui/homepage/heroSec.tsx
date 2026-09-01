@@ -8,7 +8,7 @@ export default function HeroSection() {
   return (
     <section className="relative flex min-h-screen justify-center overflow-hidden px-5 pt-50">
       <img
-        src="/cloud_bg.png"
+        src="/cloud_bg.webp"
         className="pointer-events-none absolute h-screen w-full object-cover opacity-55 mask-[linear-gradient(to_bottom,transparent_0%,black_60%,transparent_70%)]"
         alt=""
       />
