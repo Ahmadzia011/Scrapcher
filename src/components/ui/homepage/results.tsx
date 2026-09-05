@@ -79,7 +79,7 @@ export default function Results() {
           <div className="bg-(--primary-color) flex flex-col">
             <div className="flex flex-wrap items-center gap-4 p-5 md:p-6 border-b border-(--border-color)">
              
-             <img src={'image.png'} className=""/>
+             <img src="/image.webp" alt="" width={40} height={36} loading="lazy" />
 
               <div className="min-w-0 flex-1 basis-40">
                 <h3 className="text-lg md:text-xl font-medium truncate">Ready to deploy</h3>

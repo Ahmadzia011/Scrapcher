@@ -176,7 +176,7 @@ export const TESTIMONIALS = [
     rating: "4,9",
     author: "Emma Rodriguez",
     role: "Head of Customer Support",
-    image: "/client.avif",
+    image: "/images/avatar-emma.webp",
   },
   {
     quote:
@@ -184,7 +184,7 @@ export const TESTIMONIALS = [
     rating: "5,0",
     author: "Sarah Chen",
     role: "Product Marketing Manager",
-    image: "/client.avif",
+    image: "/images/avatar-sarah.webp",
   },
   {
     quote:
@@ -192,6 +192,6 @@ export const TESTIMONIALS = [
     rating: "5,0",
     author: "David Miller",
     role: "Startup Founder",
-    image: "/client.avif",
+    image: "/images/avatar-david.webp",
   },
 ];

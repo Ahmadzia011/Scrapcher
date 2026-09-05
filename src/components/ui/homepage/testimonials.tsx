@@ -82,8 +82,12 @@ export default function Testimonials() {
                 <div className=" flex items-center space-x-3">
                   <img
                     src={testimonial.image}
-                    alt={testimonial.author}
-                    className="w-10 h-10 rounded border border-(--border-color)"
+                    alt={`Illustrated robot avatar for ${testimonial.author}`}
+                    width={40}
+                    height={40}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-10 h-10 shrink-0 object-cover rounded border border-(--border-color)"
                   />
                   <div className="flex flex-col text-left">
                     <span className="text-[15px] font-medium text-(--secondary-color) leading-snug">

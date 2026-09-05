@@ -269,8 +269,11 @@ export function PrimaryDashboard() {
                   <div className="h-5 w-5 animate-spin rounded-full border-2 border-(--border-color) border-t-(--secondary-color)" />
                 </div>
 
-                <p className="mt-5 text-lg font-medium">
-                  Building your chatbot
+               <p className="mt-5 text-balance text-lg font-medium text-black/80">
+                  Working on it... <br />
+                  <span className="text-base font-normal text-black/50">
+                    This might take a few moments, so feel free to sit tight!
+                  </span>
                 </p>
               </div>
             )}
@@ -304,7 +307,7 @@ export function PrimaryDashboard() {
                   <p className="text-xs font-medium uppercase text-(--tertiary-color) mt-2">
                     Website
                   </p>
-                  <p className="mt-2 break-all text-sm">{newUrl}</p>
+                  <p className="mt-2 break-all text-sm overflow-hidden w-sm">{newUrl}</p>
                   </div>
                   
                  <button

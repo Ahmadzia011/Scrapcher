@@ -38,6 +38,7 @@ export default function HowItWorks() {
       <img
         className="pointer-events-none absolute h-full w-full object-cover opacity-55 mask-[linear-gradient(to_bottom,transparent_0%,black_55%,transparent_100%)]"
         src={"/cloud_bg.webp"}
+        alt=""
       ></img>
       <div className="relative">
         <div className="max-w-345 mx-auto text-center flex flex-col justify-center items-center px-5 md:px-8">
@@ -125,8 +126,10 @@ export default function HowItWorks() {
                    <AnimatePresence mode="wait">
                       <motion.img
                         key={activeIndex}
+                        loading="lazy"
+                        decoding="async"
                         src={
-                          `/Step_${activeIndex + 1}.png`
+                          `/images/step-${activeIndex + 1}.webp`
                         }
                         alt={activeStep?.heading || "Step preview"}
                         initial={{ opacity: 0, scale: 0.98 }}

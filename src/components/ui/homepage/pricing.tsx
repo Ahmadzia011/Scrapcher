@@ -70,7 +70,7 @@ export default function Pricing() {
                 }`}
               >
                 <div className="flex justify-between items-center">
-                  <img src={'image.png'}></img>
+                  <img src="/image.webp" alt="" width={40} height={36} loading="lazy" />
                   {plan.featured && (
                     <span className="px-2.5 py-1.5 text-xs border border-(--border-color)">
                       Popular

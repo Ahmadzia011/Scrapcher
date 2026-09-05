@@ -1,7 +1,6 @@
 // Origin/chatbotId verification happens in proxy.ts before this runs —
 // the chatbotId here is already trusted.
 export async function GET(request) {
-  const computedChatbotId = request.headers.get('x-chatbot-id');
 
   // The complete widget script represented as a raw text string payload
   const widgetScript = `
@@ -20,11 +19,11 @@ export async function GET(request) {
     console.error("Scrapcher Widget: Script tag not detected correctly.");
   }
 
-  const name = scriptTag?.dataset.name ";
-  const accent = scriptTag?.dataset.accent";
-  const background = scriptTag?.dataset.background";
-  const panel = scriptTag?.dataset.panel";
-  const text = scriptTag?.dataset.text";
+  const name = scriptTag?.dataset.name;
+  const accent = scriptTag?.dataset.accent;
+  const background = scriptTag?.dataset.background;
+  const panel = scriptTag?.dataset.panel;
+  const text = scriptTag?.dataset.text;
 
   // 3. Define Clean Reactive Native State
   const state = {

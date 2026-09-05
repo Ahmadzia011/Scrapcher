@@ -47,13 +47,16 @@ export default function HeroSection() {
 
         <div className="relative mt-22 rounded-lg border border-(--primary-color) bg-(--primary-color)/50 px-25 justify-items-center perspective-[1000px]">
           <img
-            src="/herosection_1.png"
+            src="/images/hero-status.webp"
+            width={512}
             alt="Scrapcher dashboard"
             className="absolute -top-10 rounded-2xl border-7 border-(--primary-color)/50"
           />
 
           <motion.img
-            src="/herosection_2.avif"
+            src="/images/hero-preview.webp"
+            width={1024}
+            height={343}
             alt="Scrapcher assistant preview"
             initial={{ rotateX: "30deg" }}
             animate={{ rotateX: "0deg" }}
