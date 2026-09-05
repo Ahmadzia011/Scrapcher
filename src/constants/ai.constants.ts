@@ -1,7 +1,7 @@
 // Brain Component Constants
 
 export const NO_ANSWER_MESSAGE =
-  "I don't have information about that on this website.";
+  "Hmm, I don't have the answer to that one yet! Reach out to our team and a real human will help you out.";
 
 export const BRAIN_SYSTEM_PROMPT =
 
