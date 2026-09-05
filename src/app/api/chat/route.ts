@@ -1,5 +1,7 @@
 import { getResponse } from "@/src/components/rag/responseGenerator";
 
+
+
 // 1. Handle the browser's preflight OPTIONS request
 export async function OPTIONS(request: Request) {
   const origin: string = request.headers.get("origin") || "*";
@@ -9,6 +11,7 @@ export async function OPTIONS(request: Request) {
       "Access-Control-Allow-Origin": origin,
       "Access-Control-Allow-Methods": "POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization",
+      "Vary": "Origin",
     },
   });
 }
@@ -18,7 +21,21 @@ export async function OPTIONS(request: Request) {
 // the chatbotId here is already trusted.
 export async function POST(request: Request) {
   const origin = request.headers.get("origin") || "*";
-  const chatbotId = request.headers.get("x-chatbot-id")!;
+  const chatbotId = request.headers.get("x-chatbot-id");
+
+  if (!chatbotId) {
+    return new Response(
+      JSON.stringify({ error: "Chatbot configuration is missing." }),
+      {
+        status: 400,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": origin,
+          "Vary": "Origin",
+        },
+      },
+    );
+  }
 
   try {
     const body = await request.json();
@@ -35,7 +52,8 @@ export async function POST(request: Request) {
           headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": origin,
-          },
+            "Vary": "Origin",
+            },
         },
       );
     }
@@ -44,6 +62,11 @@ export async function POST(request: Request) {
       // Prevent abuse
       return new Response(JSON.stringify({ error: "Query too long." }), {
         status: 400,
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": origin,
+          "Vary": "Origin",
+        },
       });
     }
 
@@ -54,6 +77,7 @@ export async function POST(request: Request) {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": origin,
+        "Vary": "Origin",
       },
     });
   } catch (error) {
@@ -65,6 +89,7 @@ export async function POST(request: Request) {
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": origin,
+          "Vary": "Origin",
         },
       },
     );

@@ -22,12 +22,12 @@ export const defaultWidgetConfig: WidgetConfig = {
   panelColor: "#ffffff",
   textColor: "#0f172a",
   scriptSnippet: `<script 
-      src="" 
-      data-name=""
-      data-accent=""
-      data-background=""
-      data-panel=""
-      data-text=""
+      src="${scriptUrl}"
+      data-name="Assistant"
+      data-accent="#78AEFF"
+      data-background="#f8fafc"
+      data-panel="#ffffff"
+      data-text="#0f172a"
       async>
       </script>`
 };

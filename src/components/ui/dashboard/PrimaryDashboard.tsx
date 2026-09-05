@@ -31,16 +31,24 @@ export function PrimaryDashboard() {
     (preset) => preset.value.toLowerCase() === widget.accentColor.toLowerCase()
   );
 
+  function escapeHtmlAttribute(value: string) {
+    return value
+      .replace(/&/g, "&amp;")
+      .replace(/"/g, "&quot;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
   function buildScript(chatbotId: string) {
     return `
       <script 
-        src="${scriptUrl}" 
-        data-chatbot-id="${chatbotId}"
-        data-name="${widget.name}"
-        data-accent="${widget.accentColor}"
-        data-background="${widget.backgroundColor}"
-        data-panel="${widget.panelColor}"
-        data-text="${widget.textColor}"
+        src="${escapeHtmlAttribute(scriptUrl)}" 
+        data-chatbot-id="${escapeHtmlAttribute(chatbotId)}"
+        data-name="${escapeHtmlAttribute(widget.name)}"
+        data-accent="${escapeHtmlAttribute(widget.accentColor)}"
+        data-background="${escapeHtmlAttribute(widget.backgroundColor)}"
+        data-panel="${escapeHtmlAttribute(widget.panelColor)}"
+        data-text="${escapeHtmlAttribute(widget.textColor)}"
         async>
       </script>`;
   }

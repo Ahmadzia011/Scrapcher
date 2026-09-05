@@ -10,7 +10,13 @@ const API_ZONE_PATHS = new Set(["/api/chat", "/api/widget"]);
 
 function extractOrigin(request: NextRequestWithAuth): string | null {
   const originHeader = request.headers.get("origin");
-  if (originHeader) return originHeader;
+  if (originHeader) {
+    try {
+      return new URL(originHeader).origin;
+    } catch {
+      return null;
+    }
+  }
 
   const refererHeader = request.headers.get("referer");
   if (refererHeader) {
