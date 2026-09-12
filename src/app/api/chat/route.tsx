@@ -1,10 +1,10 @@
 import { getResponse } from "@/src/components/rag/responseGenerator";
-import { renderToString } from "react-dom/server";
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
 
-const parseMarkdown = (mdRaw : string) => {
+const parseMarkdown = async (mdRaw : string) => {
+const { renderToString } = await import('react-dom/server');
   return renderToString(
       <Markdown remarkPlugins={[remarkGfm]}>
         {mdRaw}
