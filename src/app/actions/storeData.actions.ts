@@ -31,7 +31,7 @@ export async function storeData(urlInput: string) {
     // The Python server returns: { origin: "https://...", pages: [{ url, markdown }] }
     const data = await response.json();
 
-    if (!data?.origin || !Array.isArray(data.pages)) {
+    if (!data?.origin || !Array.isArray(data.pages) || data.pages.length === 0) {
       console.error("Python scraper returned invalid payload:", data);
       throw new Error("Invalid Python scraper response");
     }

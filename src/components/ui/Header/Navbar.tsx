@@ -13,7 +13,6 @@ interface NavbarProps {
 }
 
 export default function Navbar({ userName, userEmail }: NavbarProps) {
-  console.log(userEmail);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (

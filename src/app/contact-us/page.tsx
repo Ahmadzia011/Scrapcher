@@ -1,14 +1,14 @@
 import Footer from '@/src/components/ui/Footer'
-import React from 'react'
 import Testimonials from '../../components/ui/homepage/testimonials'
-import Navbar from '@/src/components/ui/Header/Navbar'
-import SectionHeader from '@/src/components/ui/SectionHeader'
 import ConheroSec from './ConHeroSec'
+import Header from '@/src/components/ui/Header/Header'
 
-export default function Contact() {
+export default async function Contact() {
+
+  
   return (
     <div>
-    <Navbar/>
+    <Header/>
     <ConheroSec/>
     <Testimonials/>
       <Footer/>
