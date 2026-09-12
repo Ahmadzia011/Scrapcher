@@ -1,17 +1,4 @@
 import { getResponse } from "@/src/components/rag/responseGenerator";
-import Markdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-
-
-const parseMarkdown = async (mdRaw : string) => {
-const { renderToString } = await import('react-dom/server');
-  return renderToString(
-      <Markdown remarkPlugins={[remarkGfm]}>
-        {mdRaw}
-      </Markdown>
-  )
-  
-}
 
 // 1. Handle the browser's preflight OPTIONS request
 export async function OPTIONS(request: Request) {
@@ -84,9 +71,7 @@ export async function POST(request: Request) {
     const responseData = await getResponse(chatbotId, query, history);
 
 
-    const llmResponse = parseMarkdown(responseData)
-
-    return new Response(JSON.stringify(llmResponse), {
+    return new Response(JSON.stringify(responseData), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
