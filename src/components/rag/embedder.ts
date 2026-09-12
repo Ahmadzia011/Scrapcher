@@ -36,11 +36,9 @@ export async function embedData(dataset: any, origin: any, chatbotId: string) {
       const validDocs = docs.filter(doc => doc && doc.trim().length > 0);
       if (validDocs.length === 0) continue;
 
-
       allText.push(...validDocs)
       allMetaData.push(...validDocs.map(() => ({ origin: origin, chatbotId: chatbotId})));
-      console.log(validDocs)
-      console.log('this is alt text:',allText)
+
     }
     catch (e) {
       console.error("Failed parsing a document item text chunk:", e);
@@ -48,26 +46,16 @@ export async function embedData(dataset: any, origin: any, chatbotId: string) {
     }
   }
 
-  console.log('this is embedingmodel:',embeddingModelInstance)
   if(allText.length > 0){
-
-  const firstHalfText = allText.slice(0,Math.ceil(allText.length/2))
-  const secHalfText = allText.slice(Math.ceil(allText.length/2))
-
-  const firstHalfMeta = allText.slice(0,Math.ceil(allMetaData.length/2))
-  const secHalfMeta = allText.slice(Math.ceil(allMetaData.length/2))
-
-  const divallText = [firstHalfText, secHalfText]
-  const divallMeta = [firstHalfMeta, secHalfMeta]
-
-  
-  console.log(divallMeta, divallText)
-  for(let i=0; i<2; i++){
-    console.log(i, 'this is all text')
     try {
+      const batch_size = 100
+      for (let i = 0; i < allText.length; i += batch_size) {
+        const textBatch = allText.slice(i, i + batch_size);
+        const metaBatch = allMetaData.slice(i, i + batch_size);
+
       await SupabaseVectorStore.fromTexts(
-        divallText[i],
-        divallMeta[i],
+      textBatch,
+      metaBatch,
         embeddingModelInstance, //Model that will be used to convert strings to vector.
         {
           client,
@@ -76,11 +64,12 @@ export async function embedData(dataset: any, origin: any, chatbotId: string) {
         },
       );
     }
+    }
     catch (e) {
       console.error("Embedding error:", e);
       throw new Error("Embedding failed.");
     }
-    }
+    
 }
 
   console.log("Embedding done");

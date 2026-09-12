@@ -4,6 +4,15 @@ import chatModel from "@/src/lib/chat-model";
 import { retrieveData } from "./retriever";
 import { BRAIN_SYSTEM_PROMPT, NO_ANSWER_MESSAGE } from "@/src/constants/ai.constants";
 
+
+const jsonSchema = {
+  type: "object",
+  properties: {
+    result: { type: "string", description: "The single llm response" }
+  },
+  required: ["result"]
+};
+
 export async function getResponse(chatbotId:string, question:string, history:string[] = []) {
   console.log("Recieved the request");
 
@@ -27,7 +36,7 @@ export async function getResponse(chatbotId:string, question:string, history:str
     chat_history: history.join("\n\n"),
   });
 
-  const aiResponse = await llm.invoke(formattedPrompt);
-
-  return aiResponse.content;
+  const structuredModel = llm.withStructuredOutput(jsonSchema, { name : "response"})
+  const aiResponse = await structuredModel.invoke(formattedPrompt);
+  return aiResponse.result
 }
