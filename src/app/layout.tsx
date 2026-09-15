@@ -25,7 +25,7 @@ export default function RootLayout({
       lang="en"
       className={`${interSans.variable} h-full antialiased`}
     >
-      <LenisScroll><body className="min-h-full flex flex-col">{children}</body></LenisScroll>
+      <LenisScroll/><body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }
