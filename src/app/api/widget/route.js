@@ -162,7 +162,6 @@ export async function GET(request) {
     <div class="fixed-wrapper">
       <button type="button" class="launcher-btn" aria-label="Open chat widget">
         \${ICONS.messageCircle}
-        <span class="launcher-badge">1</span>
       </button>
 
       <section class="chat-window hidden">
