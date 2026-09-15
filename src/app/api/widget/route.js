@@ -181,7 +181,7 @@ export async function GET(request) {
         </header>
 
         <div class="sub-header-stripe"></div>
-        <div class="messages-container">
+        <div class="messages-container"   data-lenis-prevent>
           <div class="messages-list"></div>
         </div>
 
