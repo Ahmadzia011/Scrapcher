@@ -1,7 +1,6 @@
 // Origin/chatbotId verification happens in proxy.ts before this runs —
 // the chatbotId here is already trusted.
 export async function GET(request) {
-
   // The complete widget script represented as a raw text string payload
   const widgetScript = `
 (function () {
@@ -49,9 +48,153 @@ export async function GET(request) {
 
   // 6. Inline Lucide Node Raw Vector Assets Map
   const ICONS = {
-    globe: \`<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>\`,
     chevronDown: \`<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>\`,
-    bot: \`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></svg>\`,
+    bot: \`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800" width="100%" height="100%">
+              <defs>
+                <!-- Background Gradient for Body -->
+                <radialGradient id="bodyGrad" cx="50%" cy="30%" r="70%">
+                  <stop offset="0%" stop-color="#ffffff"/>
+                  <stop offset="70%" stop-color="#f0f2f5"/>
+                  <stop offset="100%" stop-color="#d9dee6"/>
+                </radialGradient>
+
+                <!-- Head Gradient -->
+                <radialGradient id="headGrad" cx="50%" cy="30%" r="65%">
+                  <stop offset="0%" stop-color="#ffffff"/>
+                  <stop offset="75%" stop-color="#edf0f5"/>
+                  <stop offset="100%" stop-color="#d3d9e3"/>
+                </radialGradient>
+
+                <!-- Arm Gradients -->
+                <linearGradient id="armLeftGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#ffffff"/>
+                  <stop offset="100%" stop-color="#d0d6e0"/>
+                </linearGradient>
+
+                <linearGradient id="armRightGrad" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#ffffff"/>
+                  <stop offset="100%" stop-color="#d0d6e0"/>
+                </linearGradient>
+
+                <!-- Ear Soft/Base Blue -->
+                <linearGradient id="earBlueGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#80ccff"/>
+                  <stop offset="50%" stop-color="#3b9eff"/>
+                  <stop offset="100%" stop-color="#1a82e6"/>
+                </linearGradient>
+
+                <!-- Ear Bright Cyan Accent -->
+                <linearGradient id="cyanAccent" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#00e5ff"/>
+                  <stop offset="100%" stop-color="#0088ff"/>
+                </linearGradient>
+
+                <!-- Eye Glow Gradient -->
+                <radialGradient id="eyeGrad" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#cbf7ff"/>
+                  <stop offset="60%" stop-color="#6ee7ff"/>
+                  <stop offset="100%" stop-color="#38bdf8"/>
+                </radialGradient>
+
+                <!-- Cloud Icon Gradient -->
+                <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#93e2ff"/>
+                  <stop offset="100%" stop-color="#3b9eff"/>
+                </linearGradient>
+
+                <!-- Dark Visor Shadow/Gradient -->
+                <linearGradient id="visorGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#4a4d4f"/>
+                  <stop offset="100%" stop-color="#5a5d60"/>
+                </linearGradient>
+
+                <!-- Chest Badge Gradient -->
+                <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stop-color="#4a4a4a"/>
+                  <stop offset="100%" stop-color="#5a5a5a"/>
+                </linearGradient>
+
+                <!-- Soft Shadows & Glows -->
+                <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+                  <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000" flood-opacity="0.08"/>
+                </filter>
+
+                <filter id="innerGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#00e5ff" flood-opacity="0.5"/>
+                </filter>
+              </defs>
+
+              <!-- BODY GROUP -->
+              <g id="robot-body">
+                <!-- Neck Connector -->
+                <rect x="378" y="380" width="44" height="30" rx="5" fill="#c2c8d4"/>
+
+                <!-- Left Arm -->
+                <path d="M 335 410 C 310 415 285 460 280 520 C 275 580 295 595 310 590 C 325 585 338 520 345 450 Z" 
+                      fill="url(#armLeftGrad)" filter="url(#shadow)"/>
+
+                <!-- Right Arm -->
+                <path d="M 465 410 C 490 415 515 460 520 520 C 525 580 505 595 490 590 C 475 585 462 520 455 450 Z" 
+                      fill="url(#armRightGrad)" filter="url(#shadow)"/>
+
+                <!-- Main Torso / Body -->
+                <path d="M 320 410 
+                        C 380 400 420 400 480 410 
+                        C 520 415 530 500 520 540 
+                        C 500 620 450 630 400 630 
+                        C 350 630 300 620 280 540 
+                        C 270 500 280 415 320 410 Z" 
+                      fill="url(#bodyGrad)" filter="url(#shadow)"/>
+
+                <!-- Chest Badge Plate -->
+                <path d="M 345 410 L 455 410 C 465 410 470 420 470 430 L 460 470 C 450 485 425 488 400 488 C 375 488 350 485 340 470 L 330 430 C 330 420 335 410 345 410 Z" 
+                      fill="url(#badgeGrad)"/>
+
+                <!-- Cloud Symbol on Chest -->
+                <path d="M 388 460 
+                        A 12 12 0 0 1 402 448 
+                        A 15 15 0 0 1 422 454 
+                        A 10 10 0 0 1 422 468 
+                        A 8 8 0 0 1 414 470 
+                        L 388 470 
+                        A 10 10 0 0 1 388 460 Z" 
+                      fill="url(#cloudGrad)"/>
+              </g>
+
+              <!-- HEAD GROUP -->
+              <g id="robot-head">
+                <!-- Left Ear Structure -->
+                <path d="M 270 215 C 270 215 295 235 290 280 L 275 280 C 275 250 260 230 260 230 Z" fill="url(#cyanAccent)"/>
+                <rect x="250" y="270" width="22" height="60" rx="11" fill="url(#earBlueGrad)" filter="url(#shadow)"/>
+                <rect x="258" y="278" width="14" height="44" rx="7" fill="#e8f4ff" opacity="0.3"/>
+
+                <!-- Right Ear Structure -->
+                <path d="M 530 215 C 530 215 505 235 510 280 L 525 280 C 525 250 540 230 540 230 Z" fill="url(#cyanAccent)"/>
+                <rect x="528" y="270" width="22" height="60" rx="11" fill="url(#earBlueGrad)" filter="url(#shadow)"/>
+                <rect x="528" y="278" width="14" height="44" rx="7" fill="#e8f4ff" opacity="0.3"/>
+
+                <!-- Main Head Outer Shell -->
+                <rect x="260" y="200" width="280" height="210" rx="105" fill="url(#headGrad)" filter="url(#shadow)"/>
+
+                <!-- Forehead Dots -->
+                <circle cx="376" cy="242" r="4" fill="#8a94a6"/>
+                <circle cx="400" cy="240" r="4.5" fill="#8a94a6"/>
+                <circle cx="424" cy="242" r="4" fill="#8a94a6"/>
+
+                <!-- Dark Helmet Visor -->
+                <rect x="295" y="252" width="210" height="116" rx="58" fill="url(#visorGrad)"/>
+                <rect x="297" y="254" width="206" height="112" rx="56" fill="none" stroke="#3a3d40" stroke-width="3" opacity="0.7"/>
+
+                <!-- Left Eye -->
+                <circle cx="355" cy="310" r="30" fill="url(#eyeGrad)" filter="url(#innerGlow)"/>
+                <ellipse cx="348" cy="302" rx="22" ry="18" fill="#ffffff" opacity="0.25"/>
+
+                <!-- Right Eye -->
+                <circle cx="445" cy="310" r="30" fill="url(#eyeGrad)" filter="url(#innerGlow)"/>
+                <ellipse cx="438" cy="302" rx="22" ry="18" fill="#ffffff" opacity="0.25"/>
+              </g>
+            </svg>
+            \`,
     user: \`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>\`,
     send: \`<svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>\`,
     messageCircle: \`<svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>\`,
@@ -70,7 +213,7 @@ export async function GET(request) {
       <section class="chat-window hidden">
         <header class="chat-header">
           <div class="brand-container">
-            <div class="brand-icon">\${ICONS.globe}</div>
+            <div class="brand-icon">\${ICONS.bot}</div>
             <div class="brand-meta">
               <h2 class="title-text">\${name}</h2>
               <p class="subtitle-id">AI Assistant</p>
