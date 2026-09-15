@@ -48,7 +48,7 @@ export async function embedData(dataset: any, origin: any, chatbotId: string) {
 
   if(allText.length > 0){
     try {
-      const batch_size = 50
+      const batch_size = 100
       for (let i = 0; i < allText.length; i += batch_size) {
         const textBatch = allText.slice(i, i + batch_size);
         const metaBatch = allMetaData.slice(i, i + batch_size);
