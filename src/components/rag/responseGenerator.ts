@@ -30,5 +30,5 @@ export async function getResponse(chatbotId:string, question:string, history:str
   });
 
   const aiResponse = await llm.invoke(formattedPrompt);
-  return aiResponse
+  return aiResponse.content
 }
