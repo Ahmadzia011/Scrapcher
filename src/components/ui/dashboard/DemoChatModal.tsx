@@ -4,6 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import { X, Send } from "lucide-react";
 import { askAssistant } from "@/src/app/actions/chatPreview.actions";
 import { WidgetConfig } from "@/src/constants/primary-dashboard.constants";
+import React from 'react';
+import Markdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -60,6 +63,7 @@ export default function DemoChatModal({
 
   return (
     <div
+      data-lenis-prevent
       className={`fixed inset-0 z-50 items-center justify-center bg-black/40 p-4 ${
         isOpen ? "flex" : "hidden"
       }`}
@@ -121,7 +125,7 @@ export default function DemoChatModal({
                   : { backgroundColor: widget.panelColor, color: widget.textColor }
               }
             >
-              {m.content}
+              <Markdown remarkPlugins={[remarkGfm]}>{m.content}</Markdown>
             </div>
           ))}
 
