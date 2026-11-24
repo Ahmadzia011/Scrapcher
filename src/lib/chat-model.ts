@@ -1,5 +1,7 @@
-import { HuggingFaceInferenceEmbeddings } from "@langchain/community/embeddings/hf";
 import { ChatGroq } from "@langchain/groq";
+import { HuggingFaceTransformersEmbeddings } from "@langchain/community/embeddings/huggingface_transformers";
+
+
 
 export default function chatModel() {
   const llm = new ChatGroq({
@@ -10,15 +12,16 @@ export default function chatModel() {
   return llm;
 }
 
-let embeddingModelInstance:HuggingFaceInferenceEmbeddings
+let embeddingModelInstance:HuggingFaceTransformersEmbeddings
 
 export function embeddingModel() {
   if (!embeddingModelInstance) {
-    embeddingModelInstance = new HuggingFaceInferenceEmbeddings({
-      model: "sentence-transformers/all-mpnet-base-v2",
-      provider: "hf-inference",
-      apiKey: process.env.HUGGINGFACE_API_KEY,
-    });
+
+    embeddingModelInstance = new HuggingFaceTransformersEmbeddings({
+      model : "Xenova/all-MiniLM-L6-v2",
+    })
+
+   
   }
-  return embeddingModelInstance;
+  return embeddingModelInstance;  
 }

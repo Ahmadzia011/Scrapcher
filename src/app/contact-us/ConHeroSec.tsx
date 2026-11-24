@@ -45,7 +45,7 @@ export default function ConHeroSec() {
         <div className="mt-14 border-t border-(--border-color) pt-6"/>
 
            
-           <Image src="/AI_bot.svg" alt="ai_chatbot_Avatar" width={450} height={450} className="pl-10"/>
+           <Image loading="eager" src="/AI_bot.svg" alt="ai_chatbot_Avatar" width={450} height={450} className="pl-10"/>
           
           
               <div className="mt-14 border-t border-(--border-color) pt-6"/>

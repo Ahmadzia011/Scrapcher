@@ -21,7 +21,7 @@ export default function Navbar({ userName, userEmail }: NavbarProps) {
       <div className="w-full max-w-345 h-full mx-auto px-4 md:px-8 flex items-center justify-between relative">
         {/* Left: Logo */}
         <div className="text-xl font-semibold cursor-pointer z-10 flex items-center">
-          <Image src="/AI_bot.svg" alt="bot_avatar" height={50} width={50}/>
+          <Image  loading="eager" src="/AI_bot.svg" alt="bot_avatar" height={50} width={50}/>
           <Link href="/">Scrapcher</Link>
         </div>
 

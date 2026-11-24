@@ -206,7 +206,7 @@ export function PrimaryDashboard() {
         <div className="relative flex min-h-[min(42rem,calc(100vh-9rem))] w-full flex-col overflow-hidden rounded-3xl border border-white/80 bg-white/45 shadow-xl shadow-[#78aeff]/10 backdrop-blur-md">
           <div className="flex items-center justify-between px-4 py-4 md:px-7">
             <div className="flex items-center gap-3">
-              <Image src="/AI_bot.svg" alt="" width={32} height={32} />
+              <Image  loading="eager" src="/AI_bot.svg" alt="" width={32} height={32} />
               <p className="text-sm font-semibold tracking-wide">SCRAPCHER</p>
             </div>
 
@@ -221,6 +221,7 @@ export function PrimaryDashboard() {
                 {!url.trim() && (
                   <>
                     <Image
+                     loading="eager"
                       src="/AI_bot.svg"
                       alt=""
                       width={144}

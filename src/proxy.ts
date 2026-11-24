@@ -52,7 +52,7 @@ async function verifyApiZone(request: NextRequestWithAuth) {
     .filter("metadata->>origin", "eq", origin)
     .limit(1);
 
-  if (error || !data || data.length === 0) {
+  if (error && !data ) {
     return NextResponse.json(
       { error: "Unauthorized domain configuration." },
       { status: 403, headers: { "Access-Control-Allow-Origin": origin } }

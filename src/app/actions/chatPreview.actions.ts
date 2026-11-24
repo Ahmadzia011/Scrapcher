@@ -7,8 +7,16 @@ import { getResponse } from "@/src/components/rag/responseGenerator";
 export async function askAssistant(
   chatbotId: string,
   question: string,
-  history: string[] = []
+  history: string[] = [],
 ) {
-  const response = await getResponse(chatbotId, question, history);
-  return String(response);
-}
+  let response: any;
+  
+    response = await getResponse(chatbotId, question, history);
+
+    if (!response) {
+      return null
+    } 
+    else {
+      return String(response);
+    }
+  }

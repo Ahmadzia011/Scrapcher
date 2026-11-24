@@ -50,6 +50,9 @@ export default function DemoChatModal({
     try {
       const history = messages.slice(-10).map((m) => `${m.role}: ${m.content}`);
       const answer = await askAssistant(chatbotId, question, history);
+      if(!answer){
+        throw new Error()
+      }
       setMessages((prev) => [...prev, { role: "assistant", content: answer }]);
     } catch {
       setMessages((prev) => [
